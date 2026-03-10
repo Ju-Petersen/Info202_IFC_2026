@@ -101,4 +101,4 @@ for r in rs:
             tabela[ing] = ing
             #... AAAAAAAAAAAAAAAAAAAAAAAAAAMJNUNGYEBDGSVYVBWtvdgcbds
 
-print(tabela[ing])
+        print(tabela[ing])

@@ -94,12 +94,12 @@ tabela = {}
 
 for rec in rs:
     for ing in rec.ingredientes:
-        ing = f"{ing.nome}, {ing.quantidade}"
-
-        if ing in tabela:
-            tabela[ing] += ing.quantidade
+        ing.nome = f"{ing.nome}, {ing.quantidade}"
+        #Utilizar "nome" como chave???
+        if ing.nome in tabela:
+            tabela[ing.nome] += ing.quantidade
             #Lembrete ao adicionar itens em dict: colocar o equivalente ("nome_tabela[variável/dado]")
         else:
-            tabela[ing] += ing
+            tabela[ing.nome] += ing.quantidade
 
-        print(tabela[ing])
+        print(tabela[ing.nome])

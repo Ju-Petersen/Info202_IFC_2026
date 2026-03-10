@@ -23,11 +23,6 @@ r1 = Receita("Bolo de Milho", 50,
               "Bater tudo no liquidificador e colocar no forno")
 
 #i1= Ingrediente()
-#i2= Ingrediente()
-#i3= Ingrediente()
-#i4= Ingrediente()
-#i5= Ingrediente()
-#i6= Ingrediente()
 #Não é necessário deixar 
 # os ingredientes separados (mais variáveis) 
 # apenas mudar i1, i2 .... pelo nome do ingrediente
@@ -77,3 +72,5 @@ print(r2)
 
 for i in ir2s:
     print(i.quantidade, i.unidade, i.ingrediente)
+
+tabela = {}

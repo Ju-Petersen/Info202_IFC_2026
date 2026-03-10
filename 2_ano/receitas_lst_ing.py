@@ -1,3 +1,4 @@
+#classe 1
 class Receita:
     def __init__(self, nm, tmp_pr, md_pr, ingr):
         self.nome = nm
@@ -7,11 +8,11 @@ class Receita:
     #definição p/ print de variável com str
     def __str__(self):
         ing = ""
-        #"for ... in self.parametro" percorre os objetos da classe colocada como artributo de outra classe
+        #"for ... in self.parametro" força o artributo dos ingredientes a ser str p/ o print
         for ings in self.ingredientes:
-            ing = ing + str(ings)
-        #"x" é a variável que guarda o print para retornar os dados em str
-        x= f'''
+            ing += str(ings)
+
+        return f'''
 Receita: {self.nome}
 
 Tempo de preparo: {self.tempo_preparo} min
@@ -22,8 +23,7 @@ Ingredientes:
 Modo de preparo:
 {self.modo_preparo}
                 '''
-        return x
-
+#classe 2
 class Ingredientes:
     def __init__(self, nm, quant, uni):
         self.nome = nm
@@ -40,12 +40,12 @@ class Ingredientes:
 i1 = Ingredientes("Cogumelo", 1, "unidade de")
 i2 = Ingredientes("Miojo", 1, "pacote de")
 #ingredientes da receita 2:
-i3= Ingredientes("Milho", 1, "lata (milho)")
-i4= Ingredientes("Leite", 1, "lata (milho)")
-i5= Ingredientes("Açúcar", 1, "lata (milho)")
-i6= Ingredientes("Ovos", 3, "unidade")
-i7= Ingredientes("Óleo", 0.5, "lata (milho)")
-i8= Ingredientes("Fermento", 1, "colher de chá")
+i3= Ingredientes("Milho", 1, "lata de")
+i4= Ingredientes("Leite", 1, "lata (milho) de")
+i5= Ingredientes("Açúcar", 1, "lata (milho) de")
+i6= Ingredientes("Ovos", 3, "unidade de")
+i7= Ingredientes("Óleo", 0.5, "lata (milho) de")
+i8= Ingredientes("Fermento", 1, "colher de chá de")
 #ingredientes da receita 3:
 i9= Ingredientes("Margarina", 6, "colheres de sopa")
 i10= Ingredientes("Chocolate em pó", 0.5, "xícara de")
@@ -84,22 +84,22 @@ r3 = Receita("Brownie", 40,
 
     6 - Para descongelar, coloque o brownie num prato de sobremesa e aqueça no micro-ondas, potência alta, por 1 minuto''', r3_ing)
 #prints separados para que cada receita seja visualizada em baixo da outra
-#print(r1)
-#print(r2)
-#print(r3)
+print(r1)
+print(r2)
+print(r3)
 
 #Implementar lista que mostra apenas os ingredientes necessários para as 3 receitas em uma tabela(dicionário):
 rs = [r1, r2, r3]
 tabela = {}
 
-for r in rs:
-    for ing in r.ingredientes:
+for rec in rs:
+    for ing in rec.ingredientes:
+        ing = f"{ing.nome}, {ing.quantidade}"
+
         if ing in tabela:
-            ing = f"{ing.nome}, {ing.quantidade}"
             tabela[ing] += ing.quantidade
             #Lembrete ao adicionar itens em dict: colocar o equivalente ("nome_tabela[variável/dado]")
         else:
-            ing = f"{ing.nome}, {ing.quantidade}"
             tabela[ing] += ing
 
-    print(tabela[ing])
+        print(tabela[ing])

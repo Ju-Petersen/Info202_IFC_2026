@@ -37,26 +37,26 @@ class Ingredientes:
 #teste classe ----------------------------------------------------------------------------------------
 
 #ingredientes da receita1:
-i1 = Ingredientes("Cogumelo", 1, "unidade de")
-i2 = Ingredientes("Miojo", 1, "pacote de")
+i1 = Ingredientes("Cogumelo", 1, "unidade")
+i2 = Ingredientes("Miojo", 1, "pacote")
 #ingredientes da receita 2:
-i3= Ingredientes("Milho", 1, "lata de")
-i4= Ingredientes("Leite", 1, "lata (milho) de")
-i5= Ingredientes("Açúcar", 1, "lata (milho) de")
-i6= Ingredientes("Ovos", 3, "unidade de")
-i7= Ingredientes("Óleo", 0.5, "lata (milho) de")
-i8= Ingredientes("Fermento", 1, "colher de chá de")
+i3= Ingredientes("Milho", 1, "lata")
+i4= Ingredientes("Leite", 1, "lata")
+i5= Ingredientes("Açúcar", 1, "lata")
+i6= Ingredientes("Ovos", 3, "unidade")
+i7= Ingredientes("Óleo", 0.5, "lata")
+i8= Ingredientes("Fermento", 1, "colher chá")
 #ingredientes da receita 3:
-i9= Ingredientes("Margarina", 6, "colheres de sopa")
-i10= Ingredientes("Chocolate em pó", 0.5, "xícara de")
-i11= Ingredientes("Açúcar", 2, "xícaras de")
-i12= Ingredientes("Sal", 2, "pitadas de")
+i9= Ingredientes("Margarina", 6, "colheres sopa")
+i10= Ingredientes("Chocolate em pó", 0.5, "xícara")
+i11= Ingredientes("Açúcar", 2, "xícaras")
+i12= Ingredientes("Sal", 2, "pitadas")
 i13= Ingredientes("Chocolate meio amargo", 1, "tablete")
-i14= Ingredientes("Achocolatado", 0.75, "xícara de")
-i15= Ingredientes("Farinha de trigo", 1.25, "xícaras de")
+i14= Ingredientes("Achocolatado", 0.75, "xícara ")
+i15= Ingredientes("Farinha de trigo", 1.25, "xícaras")
 i16= Ingredientes("Ovos", 4, "unidades de")
-i17= Ingredientes("Essência de baunilha", 1, "colher de chá")
-i18= Ingredientes("Nozes picadas", 0.5, "xícara de")
+i17= Ingredientes("Essência de baunilha", 1, "colher chá")
+i18= Ingredientes("Nozes picadas", 0.5, "xícara")
 
 r1_ing = [i1, i2]
 r2_ing = [i3, i4, i5, i6, i7, i8]
@@ -84,9 +84,9 @@ r3 = Receita("Brownie", 40,
 
     6 - Para descongelar, coloque o brownie num prato de sobremesa e aqueça no micro-ondas, potência alta, por 1 minuto''', r3_ing)
 #prints separados para que cada receita seja visualizada em baixo da outra
-print(r1)
-print(r2)
-print(r3)
+#print(r1)
+#print(r2)
+#print(r3)
 
 #Implementar lista que mostra apenas os ingredientes necessários para as 3 receitas em uma tabela(dicionário):
 rs = [r1, r2, r3]
@@ -97,8 +97,9 @@ for rec in rs:
         #Utilizar "nome" como chave???
         if ing.nome in tabela:
             tabela[ing.nome] += ing.quantidade
-            #Lembrete ao adicionar itens em dict: colocar o equivalente ("nome_tabela[variável/dado]")
         else:
             tabela[ing.nome] = ing.quantidade
-
-        print(tabela[ing.nome], ing.unidade, ing.nome)
+            #Lembrete ao adicionar itens em dict: colocar o equivalente ("nome_tabela[variável/dado]")
+        
+        print(ing.nome, tabela[ing.nome])
+        #Imprime duplicado por conta do loop >:/ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa eu n guento + ch wdh ahvhbvhbhcb

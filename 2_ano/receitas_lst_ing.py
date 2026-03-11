@@ -91,14 +91,17 @@ r3 = Receita("Brownie", 40,
 #Implementar lista que mostra apenas os ingredientes necessários para as 3 receitas em uma tabela(dicionário):
 rs = [r1, r2, r3]
 tabela = {}
+lst_ing = []
 
 for rec in rs:
     for ing in rec.ingredientes:
-        #Utilizar "nome" como chave???
+        #Utilizar "nome" como chave
         if ing.nome in tabela:
             tabela[ing.nome] += ing.quantidade
         else:
-            tabela[ing.nome] = ing.quantidade
+            tabela[ing.nome] = ing
             #Lembrete ao adicionar itens em dict: colocar o equivalente ("nome_tabela[variável/dado]")
-        
-        print(ing.nome, tabela[ing.nome])
+            lst_ing.append(ing.nome)
+            #A lista é para o print não sair duplicado (na teoria)
+        for i in lst_ing:
+            print(f"{tabela[i].quantidade} de {tabela[i].nome}")

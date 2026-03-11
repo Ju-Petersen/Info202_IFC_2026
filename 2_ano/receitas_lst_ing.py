@@ -102,4 +102,3 @@ for rec in rs:
             #Lembrete ao adicionar itens em dict: colocar o equivalente ("nome_tabela[variável/dado]")
         
         print(ing.nome, tabela[ing.nome])
-        #Imprime duplicado por conta do loop >:/ aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa eu n guento + ch wdh ahvhbvhbhcb

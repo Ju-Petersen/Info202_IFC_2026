@@ -41,26 +41,25 @@ i1 = Ingredientes("Cogumelo", 1, "unidade")
 i2 = Ingredientes("Miojo", 1, "pacote")
 #ingredientes da receita 2:
 i3= Ingredientes("Milho", 1, "lata")
-i4= Ingredientes("Leite", 1, "lata")
-i5= Ingredientes("Açúcar", 1, "lata")
-i6= Ingredientes("Ovos", 3, "unidade")
-i7= Ingredientes("Óleo", 0.5, "lata")
+i4= Ingredientes("Leite", 1, "xícara")
+i5= Ingredientes("Açúcar", 1, "xícara")
+i6= Ingredientes("Ovos", 3, "unidades")
+i7= Ingredientes("Óleo", 0.5, "xícara")
 i8= Ingredientes("Fermento", 1, "colher chá")
+i9= Ingredientes("Farinha", 2, "xícara")
 #ingredientes da receita 3:
-i9= Ingredientes("Margarina", 6, "colheres sopa")
-i10= Ingredientes("Chocolate em pó", 0.5, "xícara")
+i10= Ingredientes("Óleo", 0.5, "xícara")
 i11= Ingredientes("Açúcar", 2, "xícaras")
 i12= Ingredientes("Sal", 2, "pitadas")
-i13= Ingredientes("Chocolate meio amargo", 1, "tablete")
-i14= Ingredientes("Achocolatado", 0.75, "xícara ")
-i15= Ingredientes("Farinha de trigo", 1.25, "xícaras")
-i16= Ingredientes("Ovos", 4, "unidades de")
-i17= Ingredientes("Essência de baunilha", 1, "colher chá")
-i18= Ingredientes("Nozes picadas", 0.5, "xícara")
+i13= Ingredientes("Cenoura", 3, "unidades")
+i14= Ingredientes("Farinha de trigo", 2, "xícaras")
+i15= Ingredientes("Ovos", 4, "unidades de")
+i16= Ingredientes("Fermento", 1, "colher chá")
+i17= Ingredientes("Leite", 0.5, "xícara")
 
 r1_ing = [i1, i2]
-r2_ing = [i3, i4, i5, i6, i7, i8]
-r3_ing = [i9, i10, i11, i12, i13, i14, i15, i16, i17, i18]
+r2_ing = [i3, i4, i5, i6, i7, i8, i9]
+r3_ing = [i10, i11, i12, i13, i14, i15, i16, i17]
 
 #variável = nome_da_classe(parâmetro1, parâmetro2, ...)
 r1 = Receita("Mario", 50, '''
@@ -70,28 +69,27 @@ r1 = Receita("Mario", 50, '''
 r2 = Receita("Bolo de Milho", 50,
               '''
 Bater tudo no liquidificador e colocar no forno''', r2_ing)
-r3 = Receita("Brownie", 40, 
+r3 = Receita("Bolo de Cenoura", 40, 
 '''
-    1 - Misture os ovos e o açúcar.
+    1 - Em um liquidificador bata o leite e cenoura;
 
-    2 - Em seguida, agregue todos os outros ingredientes até formar um creme uniforme.
+    2 - Em seguida, adicione os ovos, açúcar, óleo e bata novamente;
 
-    3 - Despeje em uma assadeira, forrada com papel-manteiga e leve ao forno médio por 40 minutos.
+    3 - Adicione a farinha aos poucos enquanto bate a massa até ficar homogênea;
 
-    4 - O brownie estará pronto quando a parte de cima estiver levemente corada e, ao se espetar um palito, ele esteja levemente úmido (devido ao chocolate derretido).
+    4 - Por fim adicione o sal e fermento, misture;
 
-    5 - Corte em quadrados ainda quente e sirva com uma bola de sorvete de creme, ou congele num saquinho para freezer.
+    5 - Em uma forma untada despeje a massa e leve ao forno pré-aquecido a 200°C por 40 minutos, ou até a massa dourar;
 
-    6 - Para descongelar, coloque o brownie num prato de sobremesa e aqueça no micro-ondas, potência alta, por 1 minuto''', r3_ing)
+    6 - Desenforme (caso desejado) e sirva!''', r3_ing)
 #prints separados para que cada receita seja visualizada em baixo da outra
-#print(r1)
-#print(r2)
-#print(r3)
+print(r1)
+print(r2)
+print(r3)
 
 #Implementar lista que mostra apenas os ingredientes necessários para as 3 receitas em uma tabela(dicionário):
 rs = [r1, r2, r3]
 tabela = {}
-lst_ing = []
 
 for rec in rs:
     for ing in rec.ingredientes:
@@ -99,9 +97,18 @@ for rec in rs:
         if ing.nome in tabela:
             tabela[ing.nome] += ing.quantidade
         else:
-            tabela[ing.nome] = ing
-            #Lembrete ao adicionar itens em dict: colocar o equivalente ("nome_tabela[variável/dado]")
-            lst_ing.append(ing.nome)
-            #A lista é para o print não sair duplicado (na teoria)
-        for i in lst_ing:
-            print(f"{tabela[i].quantidade} de {tabela[i].nome}")
+            tabela[ing.nome] = ing.quantidade
+            #Lembrete ao adicionar itens em dict: colocar o equivalente "nome_tabela[chave]"
+
+'''
+    Tentativa de uso de lst_ing para o print em forma de lista e não duplicar os ingredientes:
+
+    lst_ing.append(ing)
+        for a in lst_ing:
+            print(f"{tabela[a].quantidade}")
+'''
+#Print em forma de lista:
+for a in tabela:
+    print(f"{a}: {tabela[a]}")
+#Print da tabela em si:
+print(tabela)

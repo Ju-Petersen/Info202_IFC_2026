@@ -35,6 +35,6 @@ class Exame:
 
 m1 = Medico("Pedro", "Radiologista")
 p1 = Paciente("Maria", "ma@gmail.com", "24/12/1977")
-c1 = Exame("23/03/26", "câncer", "24/03/26 as 13:30")
+c1 = Exame("23/03/26", "fratura na costela", "24/03/26 as 13:30")
 
 print(m1, p1, c1)

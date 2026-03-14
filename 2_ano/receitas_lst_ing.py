@@ -102,7 +102,7 @@ for rec in rs:
             #Lembrete ao adicionar itens em dict: colocar o equivalente "nome_tabela[chave]"
 
 '''
-    Tentativa de uso de lst_ing para o print em forma de lista e não duplicar os ingredientes:
+    Tentativa de uso de lst_ing para o print em forma de lista e não duplicar os ingredientes:(falha)
 
     lst_ing.append(ing)
         for a in lst_ing:
@@ -112,4 +112,12 @@ for rec in rs:
 for ingrs in tabela:
     print(f"{ingrs}: {tabela[ingrs]}")
 #Print da tabela em si:
-#print(tabela)
+'''print(tabela)'''
+
+#Implementar some de horas:
+
+for rec in rs:
+    for tp in rec.tempo_preparo:
+        tempo_total = f"{tp.tempo_preparo}"
+
+        print(tempo_total)

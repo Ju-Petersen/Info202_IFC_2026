@@ -117,9 +117,10 @@ for ingrs in tabela:
 '''print(tabela)'''
 
 #Implementar soma de tempo:
-for rec in rs:
-    tp = rec.tempo_preparo
-    if rs[]
-    tempo_total = rec.tempo_preparo + tp
-    
-print(f"O tempo total para fazer as três receitas cadastradas é de: {tempo_total} minutos")
+for a in rs:
+    tp = a.tempo_preparo
+    #Se já estiver passado pela posição 0 [r1] somar o tempo de preparo salvo(r1) com o tempo de preparo da posição 1 [r2]
+    if rs[0] != rs[0]:
+        tempo_total += tp
+
+        print(tempo_total)

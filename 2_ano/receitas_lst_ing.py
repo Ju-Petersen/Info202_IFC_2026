@@ -62,14 +62,16 @@ r2_ing = [i3, i4, i5, i6, i7, i8, i9]
 r3_ing = [i10, i11, i12, i13, i14, i15, i16, i17]
 
 #variável = nome_da_classe(parâmetro1, parâmetro2, ...)
-r1 = Receita("Mario", 50, '''
+r1 = Receita("Mario", 10, '''
 1-Pegue um cogumelo
 2-Queime ele e grite tres vezes mario
 3- coma um miojo da nitendo''', r1_ing)
-r2 = Receita("Bolo de Milho", 50,
+
+r2 = Receita("Bolo de Milho", 10,
               '''
 Bater tudo no liquidificador e colocar no forno''', r2_ing)
-r3 = Receita("Bolo de Cenoura", 40, 
+
+r3 = Receita("Bolo de Cenoura", 10, 
 '''
     1 - Em um liquidificador bata o leite e cenoura;
 
@@ -114,10 +116,10 @@ for ingrs in tabela:
 #Print da tabela em si:
 '''print(tabela)'''
 
-#Implementar some de horas:
+#Implementar soma de tempo:
 
-for rec in rs:
-    for tp in rec.tempo_preparo:
-        tempo_total = f"{tp.tempo_preparo}"
-
-        print(tempo_total)
+for a in rs:
+    tempo_total = rec.tempo_preparo
+    tempo_total += rec.tempo_preparo
+    
+print(f"O tempo total para fazer as três receitas cadastradas é de: {tempo_total} minutos")

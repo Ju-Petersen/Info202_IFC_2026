@@ -40,5 +40,19 @@ r4 = Receita()
 
 #Implementação Lista de Ingredientes:
 
-rs = [r1, r2, r3, r4]
+lst_rs = [r1, r2, r3, r4]
 tab_ings = {}
+
+#Encontrar x receita em lista de receitas:
+for rec in lst_rs:
+    #Encontrar Ingredientes da x receita:
+    for ingr in rec:
+        #Se x ingrediente estiver na receita x e não na tabela:
+        if ingr in rec.ingredientes:
+            #Adicionar ingrediente na tabela.
+            ad_ing = tab_ings[ingr.quantidade]
+        else:
+            #Somar a quantidade dos ingredientes iguais:
+            ad_ing += tab_ings[ingr.quantidade]
+
+print(tab_ings) #Editar print para sair em forma de lista

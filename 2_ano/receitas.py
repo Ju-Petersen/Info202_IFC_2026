@@ -9,7 +9,7 @@ class Receita:
     def __str__(self):
         ing = ""
         for ings in self.ingredientes:
-            ing = str(ings)
+            ing += str(ings)
 
         return f'''
         {self.nome_receita}
@@ -34,8 +34,7 @@ class Ingredientes:
     
 #teste classes:
 
-#Ingredientes:
-
+#Ingredientes r1:
 i1 = Ingredientes("Ovos", "unidade(s)", 3)
 i2 = Ingredientes("Leite", "xícara(s)", 0.5)
 i3 = Ingredientes("Farinha de Trigo", "xícara(s)", 2)
@@ -44,6 +43,28 @@ i5 = Ingredientes("Açúcar", "xícara(s)", 1)
 i6 = Ingredientes("Fermento", "colher(es) (chá)", 1)
 i7 = Ingredientes("Óleo de Soja", "colher(es) (sopa)", 2)
 r1_ing = [i1, i2, i3, i4, i5, i6, i7]
+
+#Ingredientes r2:
+i8 = 
+i9 = 
+i10 = 
+i11 = 
+i12 = 
+i13 = 
+i14 = 
+
+#Ingredientes r3:
+i15 = 
+i16 = 
+i17 = 
+i18 = 
+i19 = 
+i20 = 
+i21 = 
+i22 = 
+i23 = 
+i24 = 
+i25 = 
 
 #receita1
 r1 = Receita("Bolo de Cenoura", 50, '''
@@ -54,3 +75,11 @@ r1 = Receita("Bolo de Cenoura", 50, '''
 5 - Por fim misture o fermento;
 6 - Despeje a massa em uma forma de sua preferência untada com óleo e leve ao forno pré aquecido a 250°C por 40 minutos até a parte superior dourar;
 ''', r1_ing)
+
+print(r1)
+
+#receita2:
+
+
+
+#receita3:

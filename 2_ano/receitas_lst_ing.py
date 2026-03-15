@@ -5,6 +5,7 @@ class Receita:
         self.tempo_preparo = tmp_pr
         self.modo_preparo = md_pr
         self.ingredientes = ingr
+
     #definição p/ print de variável com str
     def __str__(self):
         ing = ""
@@ -29,7 +30,8 @@ class Ingredientes:
         self.nome = nm
         self.quantidade = quant
         self.unidade = uni
-    
+
+    #definição p/ print de variável com str
     def __str__(self):
         return f'''
 {self.quantidade} {self.unidade} {self.nome}'''
@@ -116,10 +118,10 @@ for ingrs in tabela:
 #Print da tabela em si:
 '''print(tabela)'''
 
-Implementar soma de tempo:
+#Implementar soma de tempo:
 for a in rs:
     tp = a.tempo_preparo
-    #Se já estiv#er passado pela posição 0 [r1] somar o tempo de preparo salvo(r1) com o tempo de preparo da posição 1 [r2]
+    #Se já estiver passado pela posição 0 [r1] somar o tempo de preparo salvo(r1) com o tempo de preparo da posição 1 [r2]
     if rs[0] != rs[0]:
         tempo_total += tp
 

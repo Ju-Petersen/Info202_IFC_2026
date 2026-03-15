@@ -45,26 +45,26 @@ i7 = Ingredientes("Óleo de Soja", "colher(es) (sopa)", 2)
 r1_ing = [i1, i2, i3, i4, i5, i6, i7]
 
 #Ingredientes r2:
-i8 = 
-i9 = 
-i10 = 
-i11 = 
-i12 = 
-i13 = 
-i14 = 
+i8 = Ingredientes("Ovos", "unidade(s)", 3)
+i9 = Ingredientes("Ovos", "unidade(s)", 3)
+i10 = Ingredientes("Ovos", "unidade(s)", 3)
+i11 = Ingredientes("Ovos", "unidade(s)", 3)
+i12 = Ingredientes("Ovos", "unidade(s)", 3)
+i13 = Ingredientes("Ovos", "unidade(s)", 3)
+i14 = Ingredientes("Ovos", "unidade(s)", 3)
 
 #Ingredientes r3:
-i15 = 
-i16 = 
-i17 = 
-i18 = 
-i19 = 
-i20 = 
-i21 = 
-i22 = 
-i23 = 
-i24 = 
-i25 = 
+i15 = Ingredientes("Ovos", "unidade(s)", 3)
+i16 = Ingredientes("Ovos", "unidade(s)", 3)
+i17 = Ingredientes("Ovos", "unidade(s)", 3)
+i18 = Ingredientes("Ovos", "unidade(s)", 3)
+i19 = Ingredientes("Ovos", "unidade(s)", 3)
+i20 = Ingredientes("Ovos", "unidade(s)", 3)
+i21 = Ingredientes("Ovos", "unidade(s)", 3)
+i22 = Ingredientes("Ovos", "unidade(s)", 3)
+i23 = Ingredientes("Ovos", "unidade(s)", 3)
+i24 = Ingredientes("Ovos", "unidade(s)", 3)
+i25 = Ingredientes("Ovos", "unidade(s)", 3)
 
 #receita1
 r1 = Receita("Bolo de Cenoura", 50, '''
@@ -79,7 +79,7 @@ r1 = Receita("Bolo de Cenoura", 50, '''
 print(r1)
 
 #receita2:
-
+r2 = Receita
 
 
 #receita3:

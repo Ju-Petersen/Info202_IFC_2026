@@ -28,10 +28,20 @@ class Ingredientes:
         return f'''
         - {self.quantidade} {self.unidade} de {self.nome}'''
 
-r1 = Receita
-r2 = Receita
-r3 = Receita
-r4 = Receita
+i1 = Ingredientes("", "", 0)
+i2 = Ingredientes("", "", 0)
+i3 = Ingredientes("", "", 0)
+
+r1_ing = [i1, i2, i3]
+r1 = Receita("", 0, "", r1_ing)
+r2_ing = [i1, i2, i3]
+r2 = Receita("", 0, "", r2_ing)
+r3_ing = [i1, i2, i3]
+r3 = Receita("", 0, "", r3_ing)
+r4_ing = [i1, i2, i3]
+r4 = Receita("", 0, "", r4_ing)
+
+print(r1, r2, r3, r4)
 
 rs = [r1, r2, r3, r4]
 tab_ings = {}

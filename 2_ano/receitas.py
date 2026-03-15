@@ -47,12 +47,14 @@ tab_ings = {}
 for rec in lst_rs:
     #Encontrar Ingredientes da x receita:
     for ingr in rec:
+        #Variável que funciona como chave para nome e unidade do ingr:
+        nm_ingr = f"{ingr.nome} {ingr.unidade}" '''<<<<<<<< IMPORTANTE!!!'''
         #Se x ingrediente estiver na receita x e não na tabela:
-        if ingr in rec.ingredientes:
+        if nm_ingr in rec.ingredientes:
             #Adicionar ingrediente na tabela.
-            ad_ing = tab_ings[ingr.quantidade]
+            ad_ing = tab_ings[nm_ingr.quantidade]
         else:
             #Somar a quantidade dos ingredientes iguais:
-            ad_ing += tab_ings[ingr.quantidade]
+            ad_ing += tab_ings[nm_ingr.quantidade]
 
 print(tab_ings) #Editar print para sair em forma de lista

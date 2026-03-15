@@ -31,55 +31,14 @@ class Ingredientes:
         return f'''
         {self.quantidade} {self.unidade} de {self.nome}
 '''
-    
-#teste classes:
+#Teste classes:
 
-#Ingredientes r1:
-i1 = Ingredientes("Ovos", "unidade(s)", 3)
-i2 = Ingredientes("Leite", "xícara(s)", 0.5)
-i3 = Ingredientes("Farinha de Trigo", "xícara(s)", 2)
-i4 = Ingredientes("Cenoura", "unidade(s)", 2)
-i5 = Ingredientes("Açúcar", "xícara(s)", 1)
-i6 = Ingredientes("Fermento", "colher(es) (chá)", 1)
-i7 = Ingredientes("Óleo de Soja", "colher(es) (sopa)", 2)
-r1_ing = [i1, i2, i3, i4, i5, i6, i7]
+r1 = Receita()
+r2 = Receita()
+r3 = Receita()
+r4 = Receita()
 
-#Ingredientes r2:
-i8 = Ingredientes("Ovos", "unidade(s)", 3)
-i9 = Ingredientes("Ovos", "unidade(s)", 3)
-i10 = Ingredientes("Ovos", "unidade(s)", 3)
-i11 = Ingredientes("Ovos", "unidade(s)", 3)
-i12 = Ingredientes("Ovos", "unidade(s)", 3)
-i13 = Ingredientes("Ovos", "unidade(s)", 3)
-i14 = Ingredientes("Ovos", "unidade(s)", 3)
+#Implementação Lista de Ingredientes:
 
-#Ingredientes r3:
-i15 = Ingredientes("Ovos", "unidade(s)", 3)
-i16 = Ingredientes("Ovos", "unidade(s)", 3)
-i17 = Ingredientes("Ovos", "unidade(s)", 3)
-i18 = Ingredientes("Ovos", "unidade(s)", 3)
-i19 = Ingredientes("Ovos", "unidade(s)", 3)
-i20 = Ingredientes("Ovos", "unidade(s)", 3)
-i21 = Ingredientes("Ovos", "unidade(s)", 3)
-i22 = Ingredientes("Ovos", "unidade(s)", 3)
-i23 = Ingredientes("Ovos", "unidade(s)", 3)
-i24 = Ingredientes("Ovos", "unidade(s)", 3)
-i25 = Ingredientes("Ovos", "unidade(s)", 3)
-
-#receita1
-r1 = Receita("Bolo de Cenoura", 50, '''
-1 - Descasque a cenoura e corte-a em cubos;
-2 - Em um liquidificador, misture a cenoura com o leite e óleo;
-3 - Adicione os ovos e açúcar, misture  até a mistura se tornar homogênea;
-4 - Com o liquidificador em velocidade baixa adicione a farinha aos poucos;
-5 - Por fim misture o fermento;
-6 - Despeje a massa em uma forma de sua preferência untada com óleo e leve ao forno pré aquecido a 250°C por 40 minutos até a parte superior dourar;
-''', r1_ing)
-
-print(r1)
-
-#receita2:
-r2 = Receita
-
-
-#receita3:
+rs = [r1, r2, r3, r4]
+tab_ings = {}

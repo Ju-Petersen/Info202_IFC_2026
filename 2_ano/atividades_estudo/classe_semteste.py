@@ -15,8 +15,7 @@ class Receita:
         {self.nome_receita}
         Tempo de Preparo: {self.tempo_preparo}
         Modo de Preparo: {self.modo_preparo}
-        Ingredientes: {ing}'''
-#O Ingredientes: {ing} deve retornar a classe Ingredientes forçando-a em string para o print
+        Ingredientes: {ing}''' #O Ingredientes: {ing} deve retornar a classe Ingredientes forçando-a em string para o print
 
 class Ingredientes:
     def __init__(self, nm, uni, quant):

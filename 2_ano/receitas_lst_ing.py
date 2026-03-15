@@ -116,7 +116,7 @@ for rec in rs:
 for ingrs in tabela:
     print(f"{ingrs}: {tabela[ingrs]}")
 #Print da tabela em si:
-'''print(tabela)'''
+#print(tabela)
 
 #Implementar soma de tempo:
 for a in rs:

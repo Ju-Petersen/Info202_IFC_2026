@@ -47,14 +47,18 @@ class Ordem_Servico: #classe que registra qual cliente e veiculo foi atendido
 {self.desconto}
 '''
 
-'''class Veiculo: #classe que registra veículos
+class Veiculo: #classe que registra veículos
     def __init__(self, tp, pl, cor):
-        self.tipo = tp #Se for carro, identificar portas. Se for ônibus identificar lugares
+        self.tipo = tp #Se for carro, identificar portas. Se for ônibus identificar lugares (usar 'for' e 'if'?)
         self.placa = pl
-        self.cor = cor '''
+        self.cor = cor
 
+'''
 v = "vnjfdnvb"
 v2 = "abcdefgh"
 c1 = Cliente("A", "A@email", "123456789", v)
 c2 = Cliente("B", "B@email", "987654321", v2)
-print(c1)
+servico1 = Servico(v2, "Limpeza", f"R${50.00}", "Ronaldão")
+ordem_servico1 = Ordem_Servico(c2, v2, "00/00/00", "00/00/00", "fazer somatoria de desconto")'''
+
+print("temporario")

@@ -27,9 +27,9 @@ class Cliente():
             e-mail cliente: {self.email}'''
         
 class Servico():
-    def __init__(self, descricao, valor):
-        self.descricao = descricao
-        self.valor = valor
+    def __init__(self, desc, val):
+        self.descricao = desc
+        self.valor = val
 
     def __str__(self):
         return f'''
@@ -38,9 +38,9 @@ class Servico():
         '''
         
 class Servico_realizado():
-    def __init__(self, servico, mecanico):
-        self.servico = servico
-        self.mecanico = mecanico
+    def __init__(self, ser, mec):
+        self.servico = ser
+        self.mecanico = mec
 
     def __str__(self):
         return f'''
@@ -50,12 +50,12 @@ class Servico_realizado():
         '''
         
 class Ordem_servico():
-    def __init__(self, data_entrada, veiculo, data_saida, cliente, desconto):
-        self.data_entrada = data_entrada
-        self.veiculo = veiculo
-        self.data_saida = data_saida
-        self.cliente = cliente
-        self.desconto = desconto
+    def __init__(self, dt_ent, vei, dt_sai, cli, desc):
+        self.data_entrada = dt_ent
+        self.veiculo = vei
+        self.data_saida = dt_sai
+        self.cliente = cli
+        self.desconto = desc
 
     def __str__(self):
         return f'''
@@ -70,8 +70,8 @@ class Ordem_servico():
         '''
 
 class Veiculo():
-    def __init__(self, placa, cor):
-        self.placa = placa
+    def __init__(self, pl, cor):
+        self.placa = pl
         self.cor = cor
 
     def __str__(self):
@@ -79,8 +79,8 @@ class Veiculo():
             cor: {self.cor}'''
         
 class Moto(Veiculo): #Sendo "Moto", filho de "Veiculo".
-    def __init__(self, placa, cor):
-        super().__init__(placa, cor) #Herda apenas placa e cor (no exercício não foi pedido que adicionasse a diferenciação por cilindradas).
+    def __init__(self, pl, cor):
+        super().__init__(pl, cor) #Herda apenas placa e cor (no exercício não foi pedido que adicionasse a diferenciação por cilindradas).
 
     def __str__(self):
         return f'''{super().__str__()}
@@ -88,26 +88,26 @@ class Moto(Veiculo): #Sendo "Moto", filho de "Veiculo".
 #Classes com herança:
 
 class VeiculoComPassageiro(Veiculo): #Sendo "VeiculoComPassageiro", filho de "Veiculo".
-    def __init__(self, placa, cor, lugares):
-        super().__init__(placa, cor) #Herda placa e cor, e por ter passageiros é adicionado "lugares".
-        self.lugares = lugares
+    def __init__(self, pl, cor, lug):
+        super().__init__(pl, cor) #Herda placa e cor, e por ter passageiros é adicionado "lugares".
+        self.lugares = lug
 
     def __str__(self):
         return f'''{super().__str__()}
             lugares do veículo: {self.lugares}'''
         
 class Carro(VeiculoComPassageiro): #Sendo "Carro", filho de "VeiculoComPassageiro".
-    def __init__(self, placa, lugares, cor, portas):
-        super().__init__(placa, cor, lugares) #Herda placa, cor, e lugares.Por ter diferenciação de portas, "portas" é adicionado.
-        self.portas = portas
+    def __init__(self, pl, lug, cor, por):
+        super().__init__(pl, cor, lug) #Herda placa, cor, e lugares.Por ter diferenciação de portas, "portas" é adicionado.
+        self.portas = por
 
     def __str__(self):
         return f'''placa: {super().__str__()}
             portas do veículo: {self.portas}'''
 
 class Onibus(VeiculoComPassageiro): #Sendo "Carro", filho de "VeiculoComPassageiro".
-    def __init__(self, placa, cor, lugares):
-        super().__init__(placa, cor, lugares) #Herda placa, cor, e lugares.
+    def __init__(self, pl, cor, lug):
+        super().__init__(pl, cor, lug) #Herda placa, cor, e lugares.
 
     def __str__(self):
         return f'''placa: {super().__str__()}'''

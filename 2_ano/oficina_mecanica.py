@@ -122,7 +122,6 @@ ser = Servico("troca de pneu", f"R${250}")
 serre = Servico_realizado(ser, mec) #O serviço é realizado ao ter um mecânico designado e um "tipo" de serviço.
 ord_ser = Ordem_servico("31/03/2026", vei, "01/04/2026", cli, f"{20}%")
 
-print(serre)
-print(ord_ser)
+print(f"{serre} {ord_ser}")
 
 #Implementar soma de valores e dscontos (com tabela de registros?).

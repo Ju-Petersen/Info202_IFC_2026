@@ -1,4 +1,4 @@
-#Definição das classes
+#Definição das classes:
 class Pessoa():
     def __init__(self, nm, telef, dt_nasc):
         self.nome = nm
@@ -111,7 +111,8 @@ class Onibus(VeiculoComPassageiro): #Sendo "Carro", filho de "VeiculoComPassagei
 
     def __str__(self):
         return f'''placa: {super().__str__()}'''
-        
+
+#teste de classes:
 pess = Pessoa("João", "(47)123456", "28/01/2010")
 pess1 = Pessoa("Mario", "(47)654321", "02/12/2009")
 mec = Mecanico(pess1) #Mecânico é uma pessoa.

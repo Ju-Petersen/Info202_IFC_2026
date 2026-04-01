@@ -1,28 +1,34 @@
 class Pessoa():
-    def __init__(self, nome, telefone, data_nascimento):
-        self.nome = nome
-        self.telefone = telefone
-        self.data_nascimento = data_nascimento
+    def __init__(self, nm, telef, dt_nasc):
+        self.nome = nm
+        self.telefone = telef
+        self.data_nascimento = dt_nasc
 
     def __str__(self):
         return f'''
+        Nome: {self.nome}
+        Telefone: {self.nome}
+        Data de Nascimento: {self.nome}
         '''
 
 class Mecanico():
-    def __init__(self, pessoa):
-        self.pessoa =  pessoa
+    def __init__(self, pess):
+        self.pessoa =  pess
 
     def __str__(self):
         return f'''
+        {self.pessoa}
         '''
 
 class Cliente():
-    def __init__(self, pessoa, email):
-        self.pessoa = pessoa
-        self.email = email
+    def __init__(self, pess, em):
+        self.pessoa = pess
+        self.email = em
 
     def __str__(self):
         return f'''
+        {self.pessoa}
+        e-mail: {self.email}
         '''
         
 class Servico():
@@ -32,6 +38,8 @@ class Servico():
 
     def __str__(self):
         return f'''
+        Descrição do serviço: {self.descricao}
+        Valor: {self.valor}
         '''
         
 class Servico_realizado():
@@ -41,6 +49,8 @@ class Servico_realizado():
 
     def __str__(self):
         return f'''
+        {self.servico}
+        {self.mecanico}
         '''
         
 class Ordem_servico():
@@ -53,6 +63,11 @@ class Ordem_servico():
 
     def __str__(self):
         return f'''
+        Data que o veículo entrou: {self.data_entrada}
+        Descrição do veículo: {self.veiculo}
+        Data que o veículo saiu: {self.data_saida}
+        {self.cliente}
+        Desconto aplicado: {self.desconto}
         '''
         
 class Veiculo():
@@ -62,6 +77,8 @@ class Veiculo():
 
     def __str__(self):
         return f'''
+        Placa: {self.placa}
+        Cor: {self.cor}
         '''
         
 class Moto(Veiculo):
@@ -81,6 +98,7 @@ class VeiculoComPassageiro(Veiculo):
     def __str__(self):
         return f'''
         {super().__str__()}
+        Quantidade de lugares do veículo: {self.lugares}
         '''
         
 class Carro(VeiculoComPassageiro):
@@ -91,6 +109,7 @@ class Carro(VeiculoComPassageiro):
     def __str__(self):
         return f'''
         {super().__str__()}
+        Quantidade de portas do veículo: {self.portas}
         '''
 
 class Onibus(VeiculoComPassageiro):
@@ -105,13 +124,11 @@ class Onibus(VeiculoComPassageiro):
 pess1 = Pessoa("João", "(47)123456", "28/01/2010")
 pess2 = Pessoa("Mario", "(47)654321", "02/12/2009")
 mec1 = Mecanico(pess2)
-cli1 = Cliente(pess1, "joao.joao@gmail.com")
-car1 = Carro("ythh-4534634", "cor", 5, 4)
-mot1 = Moto("gfhfg-2353456435474356", "preto")
-vei1 = Veiculo(mot1)
-vei2 = Veiculo(car1)
+cli1 = Cliente(pess1, "joaoo@gmail.com")
+car1 = Carro("ABCD-1234", "azul", 5, 4)
+vei1 = Veiculo(car1)
 ser1 = Servico("troca de pneu", "R$250")
 serre1 = Servico_realizado(ser1, mec1)
-ord_ser = Ordem_servico("25/04/2026", vei2, "26/04/2026", cli1, 20)
+ord_ser = Ordem_servico("25/04/2026", vei1, "26/04/2026", cli1, 20)
 
 print(ord_ser)

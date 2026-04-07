@@ -116,7 +116,7 @@ class Onibus(VeiculoComPassageiro): #Sendo "Carro", filho de "VeiculoComPassagei
 '''
 pess = Pessoa("João", "(47)123456", "28/01/2010")
 pess1 = Pessoa("Mario", "(47)654321", "02/12/2009")
-mec = Mecanico(pess1) #Mecânico é uma pessoa.
+mec = Mecanico(pess1) #Mecânico é uma pessoa!!
 cli = Cliente(pess, "joaoo@gmail.com") #Cliente é uma pessoa + email desta.
 vei = Carro("AAAAAAAA", 5, "azul", 4) #Lembrar que carro é um veículo, ou que "vei" é igual a "Carro(...)".
 ser = Servico("troca de pneu", f"R${250}")

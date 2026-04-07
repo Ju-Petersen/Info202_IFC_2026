@@ -113,6 +113,7 @@ class Onibus(VeiculoComPassageiro): #Sendo "Carro", filho de "VeiculoComPassagei
         return f'''placa: {super().__str__()}'''
 
 #teste de classes:
+'''
 pess = Pessoa("João", "(47)123456", "28/01/2010")
 pess1 = Pessoa("Mario", "(47)654321", "02/12/2009")
 mec = Mecanico(pess1) #Mecânico é uma pessoa.
@@ -123,5 +124,5 @@ serre = Servico_realizado(ser, mec) #O serviço é realizado ao ter um mecânico
 ord_ser = Ordem_servico("31/03/2026", vei, "01/04/2026", cli, f"{20}%")
 
 print(f"{serre} {ord_ser}")
-
+'''
 #Implementar soma de valores e dscontos (com tabela de registros?).

@@ -51,7 +51,7 @@ class Servico_realizado():
         {self.mecanico}
         '''
         
-class Servico_realizado():
+class Ordem_servico():
     def __init__(self, dt_ent, vei, dt_sai, cli, desc):
         self.data_entrada = dt_ent
         self.veiculo = vei
@@ -128,4 +128,3 @@ serre = Servico_realizado(ser, mec, ord_ser1) #O serviço é realizado ao ter um
 print(serre)'''
 
 #Implementar soma de valores e dscontos (com tabela de registros?).
-

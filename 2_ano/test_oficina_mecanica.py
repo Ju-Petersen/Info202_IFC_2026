@@ -3,7 +3,7 @@
 import unittest
 from oficina_mecanica import *
 
-class TestOficina(unittest.TestCase):
+class TestPessoa(unittest.TestCase):
 
     def test_pessoa(self):
         obj = Pessoa("João", "(47)123456", "28/01/2010")
@@ -11,12 +11,47 @@ class TestOficina(unittest.TestCase):
         self.assertEqual(obj.telefone, "(47)123456")
         self.assertEqual(obj.data_nascimento, "28/01/2010")
 
-    def test_pessoa1(self):
-        obj1 = Pessoa("João", "(47)123456", "28/01/2010")
-        self.assertEqual(obj1.nome, "-1")
-        self.assertEqual(obj1.telefone, "ABCDE")
-        self.assertEqual(obj1.data_nascimento, "-0/-10/-2919")
+class TestMecanico(unittest.TestCase):
+
+    def test_mecanico(self):
+        obj_mec = Pessoa("Mario", "(47)654321", "02/12/2009")
+        self.assertEqual(obj_mec.nome, "João")
+        self.assertEqual(obj_mec.telefone, "(47)123456")
+        self.assertEqual(obj_mec.data_nascimento, "28/01/2010")
+
+class TestCliente(unittest.TestCase):
+    def test_cliente(self):
+         obj = Pessoa("João", "(47)123456", "28/01/2010")
+         obj_cli = Cliente(obj, "joaoo@gmail.com")
+         self.assertEqual(obj.pessoa.nome, "João")
+         self.assertEqual(obj_cli.email, "joaoo@gmail.com")
+
+class TestServico(unittest.TestCase):
+    def test_servico(self):
+        obj_ser = Servico("troca de pneu", f"R${250}")
+        self.assertEqual(obj_ser.descricao, "troca de pneu")
+        self.assertEqual(obj_ser.valor, f"R${250}")
+
+class TestOrdemservico(unittest.TestCase):
+    def test(self):
+        obj_vei = Carro("AAAAAAAA", 5, "azul", 4)
+        obj = Pessoa("João", "(47)123456", "28/01/2010")
+        obj_cli = Cliente(obj, "joaoo@gmail.com")
+        obj_ordser = Ordem_servico("31/03/2026", obj_vei, "01/04/2026", obj_cli, f"{20}%")
+        self.assertEqual(obj_ordser.cliente.pessoa.nome, "João")
+        self.assertEqual(obj_ordser.cliente.pessoa.data_nascimento, "28/01/2010")
+        self.assertEqual(obj_ordser.cliente.pessoa.telefone, "(47)123456")
+        self.assertEqual(obj_ordser.cliente.email, "joaoo@gmail.com")
+        self.assertEqual(obj_ordser.data_entrada, "31/03/2026")
+        self.assertEqual(obj_ordser.data_saida, "01/04/2026")
+        self.assertEqual(obj_ordser.desconto, f"{20}%")
+        self.assertEqual(obj_ordser.veiculo.cor, "azul")
+        self.assertEqual(obj_ordser.veiculo.lugares, 5)
+        self.assertEqual(obj_ordser.veiculo.placa, "AAAAAAAA")
+        self.assertEqual(obj_ordser.veiculo.portas, 4)
 
 if __name__ == '__main__':
     # executa os testes
     unittest.main()
+
+# terminar de fazer os testes para todas as classes.

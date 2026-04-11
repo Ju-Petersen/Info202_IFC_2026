@@ -21,20 +21,20 @@ ser = Servico("troca de pneu", 250)
 ser1 = Servico("troca de óleo", 150)
 ser2 = Servico("troca de bateria", 300)
 
-ord_ser1 = Ordem_servico("31/03/2026", vei, "01/04/2026", cli, 20)
-ord_ser2 = Ordem_servico("30/03/2026", vei2, "01/04/2026", cli1, 10)
-ord_ser3 = Ordem_servico("29/03/2026", vei3, "01/04/2026", cli2, 15)
+ord_ser = Ordem_servico("31/03/2026", vei, "01/04/2026", cli, 20)
+ord_ser1 = Ordem_servico("30/03/2026", vei2, "01/04/2026", cli1, 10)
+ord_ser2 = Ordem_servico("29/03/2026", vei3, "01/04/2026", cli2, 15)
 
-serre = Servico_realizado(ser, mec, ord_ser1) #O serviço é realizado ao ter um mecânico designado e um "tipo" de serviço.
-serre1 = Servico_realizado(ser1, mec2, ord_ser2)
-serre2 = Servico_realizado(ser2, mec, ord_ser3)
+serre = Servico_realizado(ser, mec, ord_ser) #O serviço é realizado ao ter um mecânico designado e um "tipo" de serviço.
+serre1 = Servico_realizado(ser1, mec2, ord_ser1)
+serre2 = Servico_realizado(ser2, mec, ord_ser2)
 
 # print(serre)
 
 #Implementar soma de valores e dscontos (com tabela para registros?).
 
 lst_cli = [cli, cli1, cli2]
-lst_ord = [ord_ser1, ord_ser2, ord_ser3]
+lst_ord = [ord_ser, ord_ser1, ord_ser2]
 cli_ord = {}
 
 for clt in lst_cli:

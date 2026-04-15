@@ -31,7 +31,7 @@ serre2 = Servico_realizado(ser2, mec, ord_ser2)
 
 # print(serre)
 
-#Implementar soma de valores e dscontos (com tabela para registros?).
+#Implementar soma de valores e dscontos (Atividade do relatório de gastos por cliente)
 
 lst_cli = [cli, cli1, cli2]
 lst_ord = [ord_ser, ord_ser1, ord_ser2]

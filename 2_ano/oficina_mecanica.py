@@ -29,18 +29,6 @@ serre = Servico_realizado(ser, mec, ord_ser) #O serviço é realizado ao ter um 
 serre1 = Servico_realizado(ser1, mec2, ord_ser1)
 serre2 = Servico_realizado(ser2, mec, ord_ser2)
 
-# print(serre)
-
-#Implementar soma de valores e dscontos (Atividade do relatório de gastos por cliente)
-
-lst_cli = [cli, cli1, cli2]
-lst_ord = [ord_ser, ord_ser1, ord_ser2]
-cli_ord = {}
-
-for clt in lst_cli:
-    cli_ord[clt.pessoa.nome] = []
-    for ordser in lst_ord:
-        if clt == ordser:
-            cli_ord[clt.pessoa.nome].append(ordser.desconto)
-
-print(cli_ord)
+print(serre)
+print(serre1)
+print(serre2)

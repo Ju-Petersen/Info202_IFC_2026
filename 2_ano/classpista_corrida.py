@@ -1,9 +1,11 @@
+import time
+
 class Veiculo():
-    def __init__(self, pl, cor, tq, odo, rend, des):
+    def __init__(self, pl, cor, tq, rend, des):
         self.placa = pl
         self.cor = cor
         self.tanque = tq
-        self.odometro = odo
+        self.odometro = 0
         self.rendimento = rend
         self.desenho = des
 

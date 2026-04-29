@@ -51,3 +51,4 @@ while True:
     time.sleep(1)
     if relampago_marquinhos.veiculos[0].odometro >= 250 and relampago_marquinhos.veiculos[1].odometro >= 250:
         break
+

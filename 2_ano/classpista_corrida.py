@@ -41,7 +41,7 @@ class Pista():
 
 vei1 = Veiculo("ABCD-1234", "azul", 30, 5, "O--O")
 vei2 = Veiculo("DCBA-4321", "preto", 60, 10, "C---C")
-relampago_marquinhos = Pista(250)
+relampago_marquinhos = Pista(10)
 relampago_marquinhos.veiculos.append(vei1)
 relampago_marquinhos.veiculos.append(vei2)
 
@@ -49,6 +49,5 @@ while True:
     relampago_marquinhos.esperar()
     relampago_marquinhos.grafico_pista()
     time.sleep(1)
-    if relampago_marquinhos.veiculos[0].odometro >= 250 and relampago_marquinhos.veiculos[1].odometro >= 250:
+    if relampago_marquinhos.veiculos[0].odometro >= 10 and relampago_marquinhos.veiculos[1].odometro >= 10:
         break
-

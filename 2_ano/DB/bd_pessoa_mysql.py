@@ -1,11 +1,10 @@
+import mysql.connector
 class Pessoa:
     def __init__(self, nm, dt_nasc, cpf, em):
         self.nome = nm
         self.data_nascimento = dt_nasc
         self.cpf = cpf
         self.email = em
-
-import mysql.connector
 
 conn = mysql.connector.connect(
     host="10.10.8.17",

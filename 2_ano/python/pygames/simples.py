@@ -65,7 +65,7 @@ f) alterar a cor de fundo da janela - FEITO
 ===> "como alterar a cor de fundo da janela no pygame zero"
 g) centralizar a janela na tela - FEITO
 ===> "como centralizar a janela no pygame zero"
-h) colocar um título na janela
+h) colocar um título na janela - FEITO
 ===> "como colocar um título na janela no pygame zero"
 
 '''

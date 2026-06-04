@@ -6,16 +6,35 @@ import math
 os.environ['SDL_VIDEO_WINDOW_POS'] = "center"
 
 TITLE = "Tentando Raycasting"
-WIDTH = 800
-HEIGHT = 600
 
-'''map_data = [
-    [1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1],
-    [1, 0, 1, 0, 1],
-    [1, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1]
-]'''
+TILE_SIZE = 50
+TILE = Rect(0, 0, TILE_SIZE, TILE_SIZE) #definir o tamanho do tile (quadrado) para rendenização
+RED = (255, 0, 0)
+WHITE = (255, 255, 255)
+
+ROWS = 12
+COLS = 20
+
+WIDTH = COLS * TILE_SIZE  #Ajustar tamanho da janela com base em rows e cols
+HEIGHT = ROWS * TILE_SIZE
+FOV = 60 * (math.pi / 180) #campo de visão
+RES = 4 #Resolução p/ rendenização
+NUM_RAYS = WIDTH // RES #raios (vetores) que serão "desenhados" a partir do movimento do player
+# no for abaixo, o "c" dá um loop pelas colunas, e "r" por cada linha
+map = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+    [1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+] #0 são espaçoes vazios e 1 são as paredes
 
 player = Actor('quadrado.png', anchor=('center', 'bottom')) #definida o ponto âncora como centro inferior, como se o ator estivesse de pé no chão
 player.pos = WIDTH // 2, HEIGHT // 2
@@ -39,18 +58,36 @@ keyboard.k_0  # A tecla principal '0'
 def draw():
     screen.clear()
     screen.fill('lightblue')
+    #Acessar cada linha por coluna para rendenizar as paredes:
+    for r in range(len(map)):
+        for c in range(len(map[0])):
+            #encontrar as coordenadas do tile
+            tile_x = c * TILE_SIZE #loop colunas
+            tile_y = r * TILE_SIZE #loop linhas
+            #verificar se é 0 ou 1:
+            if map[r][c] == 1:
+                TILE.topleft = tile_x, tile_y #Lembrar de definir a posição!!!
+                screen.draw.filled_rect(TILE, RED) #desenhar o tile para teste
+            elif map[r][c] == 0:
+                TILE.topleft = tile_x, tile_y
+                screen.draw.rect(TILE, WHITE) #desenhar o tile para teste
+    
     player.draw()
 
 def update():
     if keyboard.w:
         player.y -= 1
-        player.angle += math.cos(player.angle) * 0.5
+        player.angle += math.sin(player.angle) * 0.5
     if keyboard.s:
         player.y += 1
         player.angle -= math.sin(player.angle) * 0.5
     if keyboard.d:
         player.x += 1
+        player.angle += math.cos(player.angle) * 0.5
     if keyboard.a:
         player.x -= 1
-    
+        player.angle -= math.cos(player.angle) * 0.5
+#lembrar do círculo trigonométrico para aplicar movimentação do ângulo
+#Implementar a lógica de cálculo dos vetores ao colidir com uma parede (ou outro objeto):
+
 pgzrun.go()

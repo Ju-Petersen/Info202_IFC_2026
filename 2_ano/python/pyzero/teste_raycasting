@@ -1,0 +1,56 @@
+import pgzrun
+import os
+import math
+
+#posição da janela:
+os.environ['SDL_VIDEO_WINDOW_POS'] = "center"
+
+TITLE = "Tentando Raycasting"
+WIDTH = 800
+HEIGHT = 600
+
+'''map_data = [
+    [1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 1],
+    [1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 1],
+    [1, 1, 1, 1, 1]
+]'''
+
+player = Actor('quadrado.png', anchor=('center', 'bottom')) #definida o ponto âncora como centro inferior, como se o ator estivesse de pé no chão
+player.pos = WIDTH // 2, HEIGHT // 2
+player.angle = 0.0 #o centro de rotação é o ponto âncora
+#girar no sentido anti-horário (.angle += 1), sentido horário (.angle -= 1)
+#Actor.angle_to(target)
+
+#para setar teclas (usar a partir de on_key_*()):
+'''
+keyboard.w  --> A tecla 'W'
+keyboard.a  --> A tecla 'A'
+keyboard.s  --> A tecla 'S'
+keyboard.d  --> A tecla 'D'
+keyboard.lshift  --> A tecla shift esquerda !!pode ser "suprimida" em um evento on_rey_*!!
+keyboard.ctrl  --> A tecla 'ctrl'
+keyboard.e --> A tecla 'E'
+OBS: 
+keyboard.kp0  # A tecla '0' no teclado numérico
+keyboard.k_0  # A tecla principal '0'
+'''
+def draw():
+    screen.clear()
+    screen.fill('lightblue')
+    player.draw()
+
+def update():
+    if keyboard.w:
+        player.y -= 1
+        player.angle += math.cos(player.angle) * 0.5
+    if keyboard.s:
+        player.y += 1
+        player.angle -= math.sin(player.angle) * 0.5
+    if keyboard.d:
+        player.x += 1
+    if keyboard.a:
+        player.x -= 1
+    
+pgzrun.go()

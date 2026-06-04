@@ -23,7 +23,7 @@ base.pos = 400, 700
 # definir largura, altura e título da janela
 TITLE = "ABCD"
 WIDTH = 800
-HEIGHT = 850
+HEIGHT = 750
 
 # método que vai desenhar os atores na tela
 def draw():

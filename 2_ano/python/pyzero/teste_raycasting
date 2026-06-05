@@ -15,12 +15,12 @@ WHITE = (255, 255, 255)
 ROWS = 12
 COLS = 20
 
-WIDTH = COLS * TILE_SIZE  #Ajustar tamanho da janela com base em rows e cols
+WIDTH = COLS * TILE_SIZE  #ajustar tamanho da janela com base em rows e cols
 HEIGHT = ROWS * TILE_SIZE
-FOV = 60 * (math.pi / 180) #campo de visão
-RES = 4 #Resolução p/ rendenização
-NUM_RAYS = WIDTH // RES #raios (vetores) que serão "desenhados" a partir do movimento do player
-# no for abaixo, o "c" dá um loop pelas colunas, e "r" por cada linha
+FOV = 90 * (math.pi / 180) #campo de visão, 90°
+RES = 4 #resolução p/ rendenização
+NUM_RAYS = WIDTH // RES #raios (vetores) que serão 'desenhados' a partir do movimento do player
+#no "for" abaixo, o "c" dá um loop pelas colunas, e "r" por cada linha
 map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
@@ -36,11 +36,14 @@ map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ] #0 são espaçoes vazios e 1 são as paredes
 
-player = Actor('quadrado.png', anchor=('center', 'bottom')) #definida o ponto âncora como centro inferior, como se o ator estivesse de pé no chão
+player = Actor('circulo.png', anchor=('center', 'center'))
 player.pos = WIDTH // 2, HEIGHT // 2
-player.angle = 0.0 #o centro de rotação é o ponto âncora
+player.vel = 1.5
+player.angle = 0.0 * (math.pi / 180) #o centro de rotação é o ponto âncora e ângulo em rad
 #girar no sentido anti-horário (.angle += 1), sentido horário (.angle -= 1)
-#Actor.angle_to(target)
+start = player.x, player.y
+end = (player.x + math.cos(player.angle)*50, player.y + math.sin(player.angle)*50)
+#line = Actor(draw.line(start, end, (255, 0, 0))) --------------------------------------------------------
 
 #para setar teclas (usar a partir de on_key_*()):
 '''
@@ -55,39 +58,54 @@ OBS:
 keyboard.kp0  # A tecla '0' no teclado numérico
 keyboard.k_0  # A tecla principal '0'
 '''
+def ter_parede(x, y):
+    return map[int(y // TILE_SIZE)][int(x // TILE_SIZE)]
+
 def draw():
     screen.clear()
     screen.fill('lightblue')
-    #Acessar cada linha por coluna para rendenizar as paredes:
+    #acessar cada linha por coluna para rendenizar as paredes 
     for r in range(len(map)):
         for c in range(len(map[0])):
             #encontrar as coordenadas do tile
-            tile_x = c * TILE_SIZE #loop colunas
-            tile_y = r * TILE_SIZE #loop linhas
+            tile_x = c * TILE_SIZE - 1 #loop colunas
+            tile_y = r * TILE_SIZE - 1 #loop linhas
             #verificar se é 0 ou 1:
             if map[r][c] == 1:
                 TILE.topleft = tile_x, tile_y #Lembrar de definir a posição!!!
                 screen.draw.filled_rect(TILE, RED) #desenhar o tile para teste
             elif map[r][c] == 0:
-                TILE.topleft = tile_x, tile_y
+                TILE.topleft = tile_x, tile_y #tyle_y = r * TILE_SIZE - 1 e tyle_x = c * TILE_SIZE - 1
                 screen.draw.rect(TILE, WHITE) #desenhar o tile para teste
     
     player.draw()
+    screen.draw.line(start, end, (255, 0, 0))
+    screen.draw.filled_circle((player.pos), 5, (0, 0, 255))
+
+vetor = ((player.y + player.x)/2)*player.vel
 
 def update():
     if keyboard.w:
         player.y -= 1
-        player.angle += math.sin(player.angle) * 0.5
+        direcao_y = player.y / vetor
+        player.angle -= math.cos(player.y) * vetor
     if keyboard.s:
         player.y += 1
-        player.angle -= math.sin(player.angle) * 0.5
+        direcao_y = player.y / vetor
+        player.angle += math.cos(player.y) * vetor
     if keyboard.d:
         player.x += 1
-        player.angle += math.cos(player.angle) * 0.5
+        direcao_x = player.x / vetor
+        player.angle += math.cos(player.x) * vetor
     if keyboard.a:
         player.x -= 1
-        player.angle -= math.cos(player.angle) * 0.5
-#lembrar do círculo trigonométrico para aplicar movimentação do ângulo
-#Implementar a lógica de cálculo dos vetores ao colidir com uma parede (ou outro objeto):
+        direcao_x = player.x / vetor
+        player.angle -= math.cos(player.x) * vetor
+    #update da linha de acordo com o ângulo do player. Usando propriedades trigonométricas básicas 
+    #(SOH, CAH, TOA) de acordo com a dacomposição do vetor
+    #onde o sen e cos do ângulo que o player olha é eixo x/vetor ('vetor' sendo representado por line) e eixo y/vetor,
+    #sendo x = sen(player.angle)*vetor e y = cos(player.angle)*vetor
+    
+#Implementar a lógica de cálculo dos vetores ao colidir com uma parede (ou outro objeto)
 
 pgzrun.go()

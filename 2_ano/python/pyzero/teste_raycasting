@@ -12,6 +12,7 @@ TILE = Rect(0, 0, TILE_SIZE, TILE_SIZE) #definir o tamanho do tile (quadrado) pa
 RED = (255, 0, 0)
 WHITE = (255, 255, 255)
 
+
 ROWS = 12
 COLS = 20
 
@@ -36,14 +37,12 @@ map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 ] #0 são espaçoes vazios e 1 são as paredes
 
-player = Actor('circulo.png', anchor=('center', 'center'))
+player = Actor('quadrado.png', anchor=('center', 'center'))
 player.pos = WIDTH // 2, HEIGHT // 2
 player.vel = 1.5
-player.angle = 0.0 * (math.pi / 180) #o centro de rotação é o ponto âncora e ângulo em rad
+player.angle = 0.0 #o centro de rotação é o ponto âncora e ângulo em rad
 #girar no sentido anti-horário (.angle += 1), sentido horário (.angle -= 1)
-start = player.x, player.y
 end = (player.x + math.cos(player.angle)*50, player.y + math.sin(player.angle)*50)
-#line = Actor(draw.line(start, end, (255, 0, 0))) --------------------------------------------------------
 
 #para setar teclas (usar a partir de on_key_*()):
 '''
@@ -62,6 +61,7 @@ def ter_parede(x, y):
     return map[int(y // TILE_SIZE)][int(x // TILE_SIZE)]
 
 def draw():
+    global end
     screen.clear()
     screen.fill('lightblue')
     #acessar cada linha por coluna para rendenizar as paredes 
@@ -79,29 +79,28 @@ def draw():
                 screen.draw.rect(TILE, WHITE) #desenhar o tile para teste
     
     player.draw()
-    screen.draw.line(start, end, (255, 0, 0))
-    screen.draw.filled_circle((player.pos), 5, (0, 0, 255))
+    screen.draw.line(player.pos, end, (255, 0, 0))
 
 vetor = ((player.y + player.x)/2)*player.vel
 
 def update():
+    global end
     if keyboard.w:
-        player.y -= 1
-        direcao_y = player.y / vetor
-        player.angle -= math.cos(player.y) * vetor
+        player.y += math.sin(player.angle)
+        player.x += math.cos(player.angle)
     if keyboard.s:
-        player.y += 1
-        direcao_y = player.y / vetor
-        player.angle += math.cos(player.y) * vetor
+        player.y -= math.sin(player.angle)
+        player.x -= math.cos(player.angle)
     if keyboard.d:
-        player.x += 1
-        direcao_x = player.x / vetor
-        player.angle += math.cos(player.x) * vetor
+        player.angle += math.pi/180
     if keyboard.a:
-        player.x -= 1
-        direcao_x = player.x / vetor
-        player.angle -= math.cos(player.x) * vetor
-    #update da linha de acordo com o ângulo do player. Usando propriedades trigonométricas básicas 
+        player.angle -= math.pi/180
+    end = (player.x + math.cos(player.angle)*50, player.y + math.sin(player.angle)*50)
+
+    #nas direções x e y (frente e trás), o vetor age a partir do sen e cos do ângulo do player.
+    #nas direções x e y (direita e esquerda), o vetor age a partir da atualização do ângulo do player em radianos.
+
+    #update da linha(vetor) de acordo com o ângulo do player. Usando propriedades trigonométricas básicas 
     #(SOH, CAH, TOA) de acordo com a dacomposição do vetor
     #onde o sen e cos do ângulo que o player olha é eixo x/vetor ('vetor' sendo representado por line) e eixo y/vetor,
     #sendo x = sen(player.angle)*vetor e y = cos(player.angle)*vetor

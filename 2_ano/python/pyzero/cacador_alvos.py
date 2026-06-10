@@ -20,7 +20,7 @@ HEIGHT = 800
 quad = Actor('pacman.png')
 # definir posição do caçador (x, y)
 quad.pos = 300, 200
-quad.vel = 2
+
 # velocidade inicial do caçador
 quad.vx = 0
 quad.vy = 0
@@ -28,7 +28,7 @@ quad.vy = 0
 # definir a "passada" do caçador
 # a quantidade de deslocamentos que o caçador
 # vai "andar" a cada movimento
-passo_cacador = 5
+passo_cacador = 1
 
 # definir uma lista de alvos
 alvos = []
@@ -57,20 +57,28 @@ def draw():
         # desenha o alvo
         alvo.draw()
         # se for o primeiro alvo...
-        #ou -1 (contagem decrescente) para pegar o último alvo
-        if i == alvos[-1]:
+        if alvos[i] == alvos[-1]:
             # ... desenha um círculo vermelho ao redor dele
             screen.draw.circle(alvo.pos, 40, (255, 0, 0))
 
 # método de atualização da tela
 def update():
+    global passo_cacador
 
     # se houver algum alvo
     if alvos:
         # pegar o primeiro alvo da lista
-        #ou -1 (contagem decrescente) para pegar o último alvo
-        alvo = alvos[-1]
+        #ou -1 quando for o último da lista
+        if len(alvos) >= 0:
+            men_dist = 9999
+            indice = 0
 
+        for i in range(len(alvos)):
+            dist = ((quad.x - alvos[i].x)**2 + (quad.y - alvos[i].y)**2)**0.5
+            if dist < men_dist:
+                men_dist = dist
+                indice = i
+        alvo = alvos[indice]
         # se o caçador está "longe" do alvo em relação à "X"
         # o que é "longe"? É uma distância maior do que 10
         if abs(quad.x - alvo.x) > 10:
@@ -81,9 +89,11 @@ def update():
             if quad.x > alvo.x:
                 # ... o caçador vai ter uma velocidade "para a esquerda"
                 quad.vx = - passo_cacador
+                quad.image = 'pacman.png'
             else:
                 # ... o caçador vai se mover em breve para a direita
                 quad.vx = passo_cacador
+                quad.image = 'pacmanlado.png'
         else:
             # interrompe o movimento em X, 
             # pois ele está "alinhado" com o 
@@ -93,9 +103,11 @@ def update():
             if quad.y > alvo.y:
                 # o caçador vai subir em breve
                 quad.vy = -passo_cacador
+                quad.image = 'pacmancima.png'
             else:
                 # o caçador vai descer em breve
                 quad.vy = passo_cacador
+                quad.image = 'pacmanbaixo.png'
             
     # movimentar o ator de acordo com as 
     # velocidades que foram definidas para ele
@@ -106,8 +118,14 @@ def update():
     for alvo in alvos:
         # se o caçador colidiu com algum alvo...
         if quad.colliderect(alvo):
+            sounds.faah.set_volume(0.5) #alterar volume do som
+            sounds.faah.play() #tocar som da pasta sounds
+            if not passo_cacador >= 20:
+                passo_cacador += 1
+            else:
+                passo_cacador -= 1
             # remove o alvo da lista
-            alvos.remove(alvo)  
+            alvos.remove(alvo)
             # manda o caçador ficar parado, 
             # pois este poderia ser o último alvo
             # se precisar começar a andar de novo, 
@@ -123,10 +141,10 @@ def update():
     botoes = pygame.mouse.get_pressed()
     
     # verifica se o botão esquero está apertado
-    if botoes[0]: 
+    if randint(0, 20) == 0: 
         # cria um alvo ali na posição do mouse
         ob = Actor('ponto.png')
-        ob.pos = (x,y)
+        ob.pos = (randint(0, WIDTH), randint(0, HEIGHT))
         # adiciona o alvo na lista de alvos
         alvos.append(ob)
         
@@ -143,9 +161,9 @@ a) trocar as imagens (por exemplo, pode usar o tema do PacMan) - FEITO
 b) aumentar a velocidade do caçador - FEITO
 c) mudar a busca do caçador: em vez de pegar o "primeiro" alvo da lista, ele
 deverá pegar o "último" - FEITO
-d) em vez de pegar o primeiro ou o último alvo da lista, pegar o alvo que estiver mais perto dele :-) - 
+d) em vez de pegar o primeiro ou o último alvo da lista, pegar o alvo que estiver mais perto dele :-) - FEITO
 
 PESQUISE NA internet para descobrir como fazer este exercício abaixo:
 
-e) mudar a imagem do caçador dependendo do lado para o qual ele está indo
+e) mudar a imagem do caçador dependendo do lado para o qual ele está indo - FEITO
 '''

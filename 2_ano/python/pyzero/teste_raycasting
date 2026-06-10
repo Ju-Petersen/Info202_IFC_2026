@@ -9,9 +9,8 @@ TITLE = "Tentando Raycasting"
 
 TILE_SIZE = 50
 TILE = Rect(0, 0, TILE_SIZE, TILE_SIZE) #definir o tamanho do tile (quadrado) para rendenização
-RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 WHITE = (255, 255, 255)
-
 
 ROWS = 12
 COLS = 20
@@ -44,24 +43,15 @@ player.angle = 0.0 #o centro de rotação é o ponto âncora e ângulo em rad
 #girar no sentido anti-horário (.angle += 1), sentido horário (.angle -= 1)
 end = (player.x + math.cos(player.angle)*50, player.y + math.sin(player.angle)*50)
 
-#para setar teclas (usar a partir de on_key_*()):
-'''
-keyboard.w  --> A tecla 'W'
-keyboard.a  --> A tecla 'A'
-keyboard.s  --> A tecla 'S'
-keyboard.d  --> A tecla 'D'
-keyboard.lshift  --> A tecla shift esquerda !!pode ser "suprimida" em um evento on_rey_*!!
-keyboard.ctrl  --> A tecla 'ctrl'
-keyboard.e --> A tecla 'E'
-OBS: 
-keyboard.kp0  # A tecla '0' no teclado numérico
-keyboard.k_0  # A tecla principal '0'
-'''
 def ter_parede(x, y):
     return map[int(y // TILE_SIZE)][int(x // TILE_SIZE)]
 
+parede_x = 0
+parede_y = 0
+end_2 = parede_x, parede_y
+
 def draw():
-    global end
+    global end, parede_x, parede_y, end_2
     screen.clear()
     screen.fill('lightblue')
     #acessar cada linha por coluna para rendenizar as paredes 
@@ -73,37 +63,58 @@ def draw():
             #verificar se é 0 ou 1:
             if map[r][c] == 1:
                 TILE.topleft = tile_x, tile_y #Lembrar de definir a posição!!!
-                screen.draw.filled_rect(TILE, RED) #desenhar o tile para teste
+                screen.draw.filled_rect(TILE, BLUE) #desenhar o tile para teste
             elif map[r][c] == 0:
                 TILE.topleft = tile_x, tile_y #tyle_y = r * TILE_SIZE - 1 e tyle_x = c * TILE_SIZE - 1
                 screen.draw.rect(TILE, WHITE) #desenhar o tile para teste
     
     player.draw()
-    screen.draw.line(player.pos, end, (255, 0, 0))
-
-vetor = ((player.y + player.x)/2)*player.vel
+    screen.draw.line(player.pos, end_2, (0, 100, 0))
 
 def update():
-    global end
+    global end, parede_x, parede_y
     if keyboard.w:
-        player.y += math.sin(player.angle)
+        player.y += math.sin(player.angle) #anda em x ou y de acordo com a direção que o player "olha"
         player.x += math.cos(player.angle)
     if keyboard.s:
         player.y -= math.sin(player.angle)
         player.x -= math.cos(player.angle)
     if keyboard.d:
-        player.angle += math.pi/180
+        player.angle += math.pi/180 #atualização do ângulo (vetor) qual "aponta" para a direção que o player olha
     if keyboard.a:
         player.angle -= math.pi/180
-    end = (player.x + math.cos(player.angle)*50, player.y + math.sin(player.angle)*50)
-
-    #nas direções x e y (frente e trás), o vetor age a partir do sen e cos do ângulo do player.
-    #nas direções x e y (direita e esquerda), o vetor age a partir da atualização do ângulo do player em radianos.
-
-    #update da linha(vetor) de acordo com o ângulo do player. Usando propriedades trigonométricas básicas 
-    #(SOH, CAH, TOA) de acordo com a dacomposição do vetor
-    #onde o sen e cos do ângulo que o player olha é eixo x/vetor ('vetor' sendo representado por line) e eixo y/vetor,
-    #sendo x = sen(player.angle)*vetor e y = cos(player.angle)*vetor
+    end = (player.x + math.cos(player.angle)*50, player.y + math.sin(player.angle)*50) #update para que o "fim" do vetor aponte para onde o jogador está 'olhando'
+    
+    olhar_baixo = player.angle > 0 and player.angle < math.pi
+    olhar_cima = not olhar_baixo
+    olhar_direita = player.angle < 0.5*math.pi or player.angle > 1.5*math.pi
+    olhar_esquerda = not olhar_direita
+    
+    #(explicação do tutorial sobre os pontos de colisão x e y da parede)
+    if olhar_cima:
+        colisao_horizontal_y = (player.y // TILE_SIZE) * TILE_SIZE - 1
+    elif olhar_baixo:
+        colisao_horizontal_y = (player.y // TILE_SIZE) * TILE_SIZE + TILE_SIZE
+    if olhar_cima:
+        ya = -TILE_SIZE
+    if olhar_baixo:
+        ya = TILE_SIZE
+    xa = ya / math.tan(player.angle+1)
+    colisao_horizontal_x = player.x + (colisao_horizontal_y - player.y) / math.tan(player.angle+1)
+    
+    #Para não procurar paredes infinitamente, as colisões encontradas x e y são barradas pelo tamaanho da janela:
+    while colisao_horizontal_x <= WIDTH and colisao_horizontal_x >= 0 and colisao_horizontal_y <= WIDTH and colisao_horizontal_y >= 0:
+        #checar se existe uma parede, senão continuar a incrementação:
+        if map == ter_parede(colisao_horizontal_x, colisao_horizontal_y):
+            encontrar_colisao = True
+            parede_x = colisao_horizontal_x
+            parede_y = colisao_horizontal_y
+            break
+        else:
+            colisao_horizontal_x += xa
+            colisao_horizontal_y += ya
+    
+    end_2 = colisao_horizontal_x, colisao_horizontal_y
     
 #Implementar a lógica de cálculo dos vetores ao colidir com uma parede (ou outro objeto)
 

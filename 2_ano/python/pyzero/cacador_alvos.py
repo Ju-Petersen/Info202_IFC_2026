@@ -16,8 +16,10 @@ import pygame
 WIDTH = 1200
 HEIGHT = 800
 
+rect = Rect((WIDTH // 20, HEIGHT // 30), (5, 25))
+rec_max_width = 100
 # criar um caçador
-quad = Actor('pacman.png')
+quad = Actor('pacmanf.png')
 # definir posição do caçador (x, y)
 quad.pos = 300, 200
 
@@ -60,25 +62,31 @@ def draw():
         if alvos[i] == alvos[-1]:
             # ... desenha um círculo vermelho ao redor dele
             screen.draw.circle(alvo.pos, 40, (255, 0, 0))
+    screen.draw.text("TP", topleft=(WIDTH // 50, HEIGHT // 25), color=(255, 0, 0))
+    screen.draw.filled_rect(rect, (255, 0, 0))
 
 # método de atualização da tela
 def update():
-    global passo_cacador
+    global passo_cacador, rect
 
     # se houver algum alvo
     if alvos:
         # pegar o primeiro alvo da lista
         #ou -1 quando for o último da lista
-        if len(alvos) >= 0:
+        if len(alvos) >= 0: #Quando o tamanho da lista alvos for maior que 0 (tem pelo menos um alvo desenhado)
             men_dist = 9999
             indice = 0
 
-        for i in range(len(alvos)):
-            dist = ((quad.x - alvos[i].x)**2 + (quad.y - alvos[i].y)**2)**0.5
-            if dist < men_dist:
+        for a in range(len(alvos)): #Pegar o tamanho da lista alvos
+            # cálculo da distância entre ator(x, y) e alvo(x, y):
+            dist = ((quad.x - alvos[a].x)**2 + (quad.y - alvos[a].y)**2)**0.5
+            # baicamente compara a quantidade que 
+            # o passo do caçador tem que aumentar ou diminuir 
+            # para x e y até chegar no alvo usando a lógica mais abaixo (contando os passos).
+            if dist < men_dist: # se a distância x, y entre player e alvo for menor que men_dist:
                 men_dist = dist
-                indice = i
-        alvo = alvos[indice]
+                indice = a # pega a posição "a" da lista alvos
+        alvo = alvos[indice] #indice é a posição "a"
         # se o caçador está "longe" do alvo em relação à "X"
         # o que é "longe"? É uma distância maior do que 10
         if abs(quad.x - alvo.x) > 10:
@@ -114,16 +122,22 @@ def update():
     quad.x += quad.vx
     quad.y += quad.vy
 
+    #Quando estiver parado:
+    if quad.vx == 0 and quad.vy == 0:
+        rect = Rect((WIDTH // 20, HEIGHT // 30), (5, 25))
     # percorre os alvos...
     for alvo in alvos:
         # se o caçador colidiu com algum alvo...
         if quad.colliderect(alvo):
             sounds.faah.set_volume(0.5) #alterar volume do som
             sounds.faah.play() #tocar som da pasta sounds
+            rect.width += 1
             if not passo_cacador >= 20:
                 passo_cacador += 1
             else:
                 passo_cacador -= 1
+                if rect.width > rec_max_width or passo_cacador <= 2:
+                    rect.width -= 1
             # remove o alvo da lista
             alvos.remove(alvo)
             # manda o caçador ficar parado, 
@@ -132,17 +146,15 @@ def update():
             # ele irá fazer isso, usando a
             # outra lógica de movimentação que está mais acima
             quad.vx = 0
-            quad.vy = 0 
-
+            quad.vy = 0
     # pegar a posição do mouse
     x, y = pygame.mouse.get_pos()
     
     # retornar o estado dos botões (left_click, middle_click, right_click)
     botoes = pygame.mouse.get_pressed()
     
-    # verifica se o botão esquero está apertado
-    if randint(0, 20) == 0: 
-        # cria um alvo ali na posição do mouse
+    if randint(0, 15) == 0: 
+        # cria um alvo ali em uma posição aleatória
         ob = Actor('ponto.png')
         ob.pos = (randint(0, WIDTH), randint(0, HEIGHT))
         # adiciona o alvo na lista de alvos
@@ -166,4 +178,11 @@ d) em vez de pegar o primeiro ou o último alvo da lista, pegar o alvo que estiv
 PESQUISE NA internet para descobrir como fazer este exercício abaixo:
 
 e) mudar a imagem do caçador dependendo do lado para o qual ele está indo - FEITO
+
+Extras:
+
+- Barra que aumenta conforme a quantidade de alvos acertada - FEITO
+- Som ao acertar o alvo - FEITO
+- Alvos aparecem automaticamente - FEITO
+- Sprite "parado" enquanto o ator não acerta o alvo - 
 '''

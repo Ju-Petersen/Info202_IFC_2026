@@ -184,5 +184,4 @@ Extras:
 - Barra que aumenta conforme a quantidade de alvos acertada - FEITO
 - Som ao acertar o alvo - FEITO
 - Alvos aparecem automaticamente - FEITO
-- Sprite "parado" enquanto o ator não acerta o alvo - 
 '''

@@ -51,7 +51,7 @@ class Temperamento():
     Personalidade: {self.nome} | Elemento: {self.elemento}
     Foco: {self.foco_profissional} | Areas Ideais: {self.areas}
     '''
-    
+
 pf1 = Ponto_forte("Extrovertido")
 pf2 = Ponto_forte("Comunicativo")
 pf3 = Ponto_forte("Espontâneo")

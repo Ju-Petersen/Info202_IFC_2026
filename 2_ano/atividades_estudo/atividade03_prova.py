@@ -47,7 +47,6 @@ class Pedido:
         self.percentual = per
         self.cliente = cli
         self.prato = pr
-        self.valor_final = 0
     def calcular_valor(self):
         valor = 0
         for v in self.prato:
@@ -55,10 +54,9 @@ class Pedido:
             valor += v.valor_prato
             #calcular o reajuste por cima do percentual p/ ter "valor_final"
         valor -= valor * (self.percentual/ 100)
-        self.valor_final = valor
+        return valor
 
     def __str__(self):
-        self.calcular_valor()
         pr = ""
         pr1 = ""
         for p in self.prato:
@@ -69,7 +67,7 @@ class Pedido:
         Desconto: {self.percentual}
         Cliente: {self.cliente}
         Pratos: {pr} Preço: {pr1}
-        Total: {self.valor_final}'''
+        Total: {self.calcular_valor()}''' # variável valor_final não existe nessa modelagem
 
 c = Cliente("a", datetime.datetime(1997, 3, 3), "01.123.456-78")
 lst_ings = ["macarrão instantâneo", "tempero", "frango", "cebola", "ovo"]

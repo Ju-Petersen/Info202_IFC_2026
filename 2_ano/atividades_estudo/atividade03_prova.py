@@ -12,18 +12,6 @@ class Cliente:
         Data de Nascimento: {self.data_nascimento}
         CPF: {self.cpf}'''
 
-class Item_pedido:
-    def __init__(self, pr: Prato, val_pr: float, qtd: int):
-        self.prato = pr
-        self.valor_prato = val_pr
-        self.quantidade = qtd
-
-    def __str__(self):
-        return f'''
-        Prato: {self.prato}
-        Valor do prato: {self.valor_prato}
-        Quantidade: {self.quantidade}'''
-        
 class Prato:
     def __init__(self, nm: str, ing: list[str], md_prep: str, pre: float):
         self.nome = nm
@@ -40,6 +28,18 @@ class Prato:
         {self.modo_preparo}
 
         Preço: {self.preco}'''
+
+class Item_pedido:
+    def __init__(self, pr: Prato, val_pr: float, qtd: int):
+        self.prato = pr
+        self.valor_prato = val_pr
+        self.quantidade = qtd
+
+    def __str__(self):
+        return f'''
+        Prato: {self.prato}
+        Valor do prato: {self.valor_prato}
+        Quantidade: {self.quantidade}'''
 
 class Pedido:
     def __init__(self, dt: datetime, per: float, cli: Cliente, pr: list[Item_pedido]):

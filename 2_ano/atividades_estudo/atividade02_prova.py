@@ -50,9 +50,12 @@ class Pedido:
 c = Cliente("a", datetime.datetime(1997, 3, 3), "01.123.456-78")
 lst_ings = ["macarrão instantâneo", "tempero", "frango", "cebola", "ovo"]
 p = Prato("Miojo", lst_ings, "Ferver água, enquanto ferve colocar o macarrão e o tempero em uma panela, colocar a água fervida por cima e esperar até ficar pronto.", 100.0)
-p1 = Prato("Miojo1", lst_ings, "Ferver água, enquanto ferve colocar o macarrão, o tempero e o frango em uma panela, colocar a água fervida por cima e esperar até ficar pronto.", 200.0)
-p2 = Prato("Miojo2", lst_ings, "Ferver água, enquanto ferve colocar o macarrão, o tempero, a cebola e o ovo em uma panela, colocar a água fervida por cima e esperar até ficar pronto.", 300.0)
+p1 = Prato("Miojo1", lst_ings, "Ferver água, enquanto ferve colocar o macarrão, o tempero e o frango em uma panela, colocar a água fervida por cima e esperar até ficar pronto.", 100.0)
+p2 = Prato("Miojo2", lst_ings, "Ferver água, enquanto ferve colocar o macarrão, o tempero, a cebola e o ovo em uma panela, colocar a água fervida por cima e esperar até ficar pronto.", 100.0)
 lst_pratos = [p, p1, p2]
-ped = Pedido(datetime.date(2026, 6, 16), 50.0, 50.0, c, lst_pratos)
+ped = Pedido(datetime.date(2026, 6, 16), 50.0, 150.0, c, lst_pratos)
 
 print(ped)
+# A diferença entre os códigos 02 e 03 é basicamente o cálculo do valor de modo que 
+# o reajuste fique "salvo", ou seja, caso ocorra o reajuste tanto o valor final será 
+# calculado de acordo com este mas o preço unitário do "item_pedido" é salvo

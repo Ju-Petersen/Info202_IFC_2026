@@ -119,7 +119,6 @@ r4 = Receita("Torta de Bolacha", 30, '''
 print(r4)
 
 #Implementação Lista de Ingredientes:
-
 rs = [r1, r2, r3, r4]
 tab_ings = {}
 

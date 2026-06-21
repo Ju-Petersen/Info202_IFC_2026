@@ -164,9 +164,6 @@ def update():
 pgzrun.go()
 
 '''
-
-Ao clicar na tela, novos alvos surgirão na posição do mouse
-
 EXERCÍCIOS:
 
 a) trocar as imagens (por exemplo, pode usar o tema do PacMan) - FEITO

@@ -69,53 +69,75 @@ def draw():
                 screen.draw.rect(TILE, WHITE) #desenhar o tile para teste
     
     player.draw()
-    screen.draw.line(player.pos, end_2, (0, 100, 0))
+    screen.draw.line(player.pos, end, (0, 100, 0))
 
 def update():
     global end, parede_x, parede_y
+    dx = player.width / 2
+    dy = player.height / 2
+    posicao_playerx = player.x # posição futura
+    posicao_playery = player.y # posição futura
     if keyboard.w:
-        player.y += math.sin(player.angle) #anda em x ou y de acordo com a direção que o player "olha"
-        player.x += math.cos(player.angle)
+        posicao_playery += math.sin(player.angle) #anda em x ou y de acordo com a direção que o player "olha"
+        posicao_playerx += math.cos(player.angle)
     if keyboard.s:
-        player.y -= math.sin(player.angle)
-        player.x -= math.cos(player.angle)
+        posicao_playery -= math.sin(player.angle)
+        posicao_playerx -= math.cos(player.angle)
     if keyboard.d:
         player.angle += math.pi/180 #atualização do ângulo (vetor) qual "aponta" para a direção que o player olha
     if keyboard.a:
         player.angle -= math.pi/180
-    end = (player.x + math.cos(player.angle)*50, player.y + math.sin(player.angle)*50) #update para que o "fim" do vetor aponte para onde o jogador está 'olhando'
     
-    olhar_baixo = player.angle > 0 and player.angle < math.pi
-    olhar_cima = not olhar_baixo
-    olhar_direita = player.angle < 0.5*math.pi or player.angle > 1.5*math.pi
-    olhar_esquerda = not olhar_direita
+    cima = (posicao_playery-dx) // TILE_SIZE
+    baixo = (posicao_playery+dx) // TILE_SIZE
+    esquerda = (posicao_playerx-dy) // TILE_SIZE
+    direita = (posicao_playerx+dy) // TILE_SIZE
+    colidiu = False
+    # calcula as posições x1, x2, y1, y2
+    x1 = posicao_playerx - dx
+    x2 = posicao_playerx + dx
+    y1 = posicao_playery - dy
+    y2 =posicao_playery + dy
     
-    #(explicação do tutorial sobre os pontos de colisão x e y da parede)
-    if olhar_cima:
-        colisao_horizontal_y = (player.y // TILE_SIZE) * TILE_SIZE - 1
-    elif olhar_baixo:
-        colisao_horizontal_y = (player.y // TILE_SIZE) * TILE_SIZE + TILE_SIZE
-    if olhar_cima:
-        ya = -TILE_SIZE
-    if olhar_baixo:
-        ya = TILE_SIZE
-    xa = ya / math.tan(player.angle+1)
-    colisao_horizontal_x = player.x + (colisao_horizontal_y - player.y) / math.tan(player.angle+1)
+    # verifica se os pontos estão "dentro" da parede
+    c1 = ter_parede(x1, y1)
+    c2 = ter_parede(x2,y1)
+    c3 = ter_parede(x2,y2)
+    c4 = ter_parede(x1,y2)
+    
+    # se nenhum ponto estiver dentro da parede
+    if not (c1 or c2 or c3 or c4):
+        # movimenta o jogador
+        player.x = x1
+        player.y = y1
+    if not colidiu:
+        player.x = posicao_playerx
+        player.y = posicao_playery
+    #     if cima:
+    #         colisao_horizontal_y = (player.y // TILE_SIZE) * TILE_SIZE - 1
+    #     elif baixo:
+    #         colisao_horizontal_y = (player.y // TILE_SIZE) * TILE_SIZE + TILE_SIZE
+    #     if esquerda:
+    #         ya = -TILE_SIZE
+    #     if direita:
+    #         ya = TILE_SIZE
+    # xa = ya / math.tan(player.angle+1)
+    # colisao_horizontal_x = player.x + (colisao_horizontal_y - player.y) / math.tan(player.angle+1)
     
     #Para não procurar paredes infinitamente, as colisões encontradas x e y são barradas pelo tamaanho da janela:
-    while colisao_horizontal_x <= WIDTH and colisao_horizontal_x >= 0 and colisao_horizontal_y <= WIDTH and colisao_horizontal_y >= 0:
+    if  player.x <= WIDTH and player.x >= 0 and player.y <= HEIGHT and player.y >= 0:
         #checar se existe uma parede, senão continuar a incrementação:
-        if map == ter_parede(colisao_horizontal_x, colisao_horizontal_y):
-            encontrar_colisao = True
-            parede_x = colisao_horizontal_x
-            parede_y = colisao_horizontal_y
-            break
-        else:
-            colisao_horizontal_x += xa
-            colisao_horizontal_y += ya
+        for y in range(int(cima), int(baixo), 1):
+            for x in range(int(esquerda), int(direita), 1):
+                if map[y][x] == 1:
+                    colidiu = True
+                    break
+    if not colidiu:
+        player.x = posicao_playerx
+        player.y = posicao_playery
     
-    end_2 = colisao_horizontal_x, colisao_horizontal_y
-    
+    end = (player.x + math.cos(player.angle)*200, player.y + math.sin(player.angle)*200) #update para que o "fim" do vetor aponte para onde o jogador está 'olhando'
+
 #Implementar a lógica de cálculo dos vetores ao colidir com uma parede (ou outro objeto)
 
 pgzrun.go()

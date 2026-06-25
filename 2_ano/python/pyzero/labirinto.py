@@ -255,15 +255,9 @@ def draw():
                 )
 
     # desenha o jogador
-    player_screen = Rect(
-        (player.x - camera_x, player.y - camera_y), 
-        (player.width, player.height)
-    )
+    player_screen = Rect((player.x - camera_x, player.y - camera_y), (player.width, player.height))
     screen.draw.filled_rect(player_screen, "green")
-    enemy_screen = Rect(
-        (enemy.x - camera_x, enemy.y - camera_y), 
-        (enemy.width, enemy.height)
-    )
+    enemy_screen = Rect((enemy.x - camera_x, enemy.y - camera_y), (enemy.width, enemy.height))
     screen.draw.filled_rect(enemy_screen, "red")
 
     if goal_at(player.x, player.y):

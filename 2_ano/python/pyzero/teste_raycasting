@@ -36,9 +36,13 @@ map = [
 WIDTH = len(map[0]) * TILE_SIZE
 HEIGHT = len(map) * TILE_SIZE
 
-FOV = 90 * (math.pi / 180) #campo de visão, 90°
+WORLD_WIDTH = WIDTH // 2
+VIEW_WIDTH = WIDTH // 2
+
+FOV = math.radians(60) #campo de visão, 60°
 RES = 4 #resolução p/ rendenização
-NUM_RAYS = 200 #raios (vetores) que serão 'desenhados' a partir do movimento do player#0 são espaçoes vazios e 1 são as paredes
+NUM_RAYS = 200 #raios (vetores) que serão 'desenhados' a partir do movimento do player#0 são espaçoes vazios e 1 são as
+DIST_PLANO = VIEW_WIDTH / (2 * math.tan(FOV/2))
 
 player = Actor('circulo.png', anchor=('center', 'center'))
 player.vel = 1.5
@@ -65,19 +69,31 @@ wall_y = 0
 
 # função p/encontrar parede ('lançar' raio):
 def cast_ray(angle):
+    # modificando para usar a iteração por TILE, ao invés de pixels
     x = player.x
     y = player.y
+    step = 1
     depth = 0
 
-    while depth < 1000:
-        x += math.cos(angle)
-        y += math.sin(angle)
+    while True:
+        x += math.cos(angle)*step
+        y += math.sin(angle)*step
+        depth += step
         
         if has_wall(x, y):
-            return x, y, depth
-        
-        depth += 1
-    return x, y, depth
+            hit_x = x-math.cos(angle)
+            hit_y = y-math.sin(angle)
+            
+            tile_x = int(hit_x // TILE_SIZE)
+            tile_y = int(hit_y // TILE_SIZE)
+            offset_x = hit_x % TILE_SIZE
+            offset_y = hit_y % TILE_SIZE
+            depth = math.hypot(hit_x - player.x, hit_y - player.y)
+            # o retorno de depth significa que o vetor/linha
+            # que estiver a A pixels de disância deve parecer
+            # maior que o a B pixels de distância (considerando A < B)
+            # essa profundiade é feita pelo desenho da altura inversamente proporcional
+            return (hit_x, hit_y, depth, tile_x, tile_y, offset_x, offset_y)
 
 def draw():
     global wall_x, wall_y, end
@@ -98,12 +114,37 @@ def draw():
                 screen.draw.rect(TILE, WHITE) #desenhar o tile para teste
     player.draw()
     # lançar os ângulos até que player.angle tenha FOV positivo:
+    rays = []
     for ray in range(NUM_RAYS):
-        angle = player.angle - FOV/2 + ray * (FOV / NUM_RAYS) 
+        angle = player.angle - FOV/2 + ray * (FOV / (NUM_RAYS-1)) # isolar NUM_RAYS - 1 !!
         # o ângulo do player quando aplicada a fórmula a partir do campo de visão (FOV) direciona para onde os vetores serão desenhados
-        hit_x, hit_y, dist = cast_ray(angle)
-        dist *= math.cos(angle - player.angle)
-        screen.draw.line(player.pos, (hit_x, hit_y), (0, 255, 0))
+        hit_x, hit_y, depth, tile_x, tile_y, offset_x, offset_y = cast_ray(angle) #onde o vetor colide com a parede
+        depth *= math.cos(angle-player.angle) # remover efeito olho de peixe (?)
+        rays.append(depth)
+        screen.draw.line(player.pos, (hit_x, hit_y), (0, 255, 0)) # desta maneira os vetores representam a altura da parede na projeção.
+    column_width = VIEW_WIDTH / NUM_RAYS # a largura da coluna (um vaetor/raio/linha) baseada em NUM_RAYS, ou seja 200 raios.
+    # a divisão por WIDTH diz:
+    # se WIDTH = 1000 --> 1000 / 200 = 5, logo 
+    # raio 0 -> coluna 0
+    # raio 1 -> coluna 5
+    # raio 2 -> coluna 10
+    screen.draw.filled_rect(Rect(WORLD_WIDTH, 0, VIEW_WIDTH, HEIGHT//2), (120,170,255))
+    screen.draw.filled_rect(Rect(WORLD_WIDTH, HEIGHT//2, VIEW_WIDTH, HEIGHT//2), (80,80,80))
+    for alt, depth in enumerate(rays):
+        altura = (TILE_SIZE * DIST_PLANO)/depth
+        altura = min(HEIGHT, altura)
+        x = WORLD_WIDTH + alt*column_width
+        y = HEIGHT/2 - altura/2
+        screen.draw.filled_rect(Rect(x, y, column_width+1, altura), (120,120,255))
+    
+    # if has_wall(x, y):
+    #     old_col = int((x - (x-math.cos(angle)) * step) // TILE_SIZE) # célula antiga
+    #     old_row = int((y - (x-math.cos(angle)) * step) // TILE_SIZE) # célula antiga
+    #     new_col = int(x // TILE_SIZE) # nova célula
+    #     new_row = int(y // TILE_SIZE) # nova célula
+        # para "atingir" a parede, são verificado os quatro cantos 
+        # (2 verticais, 2 horizontais), quando o vetor atravessa uma parede, 
+        # ele atinge uma face vertical ou horizontal desta
 
 def update():
     global wall_x, wall_y, end
@@ -134,6 +175,8 @@ def update():
     
     #end = (player.x + math.cos(player.angle)*200, player.y + math.sin(player.angle)*200) #update para que o "fim" do vetor aponte para onde o jogador está 'olhando'
 
-# Lançar vários ângulos (com NUM_RAY), encontrar parede(função paramedir depth e dist), desenhar os novos vetores e armazenar distância
+# Lançar vários ângulos (com NUM_RAY) - FEITO
+# encontrar parede(função paramedir depth e depth) - 
+# desenhar os novos vetores e armazenar distância
 
 pgzrun.go()

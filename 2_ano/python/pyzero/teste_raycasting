@@ -96,7 +96,7 @@ def cast_ray(angle):
             return (hit_x, hit_y, depth, tile_x, tile_y, offset_x, offset_y)
 
 def draw():
-    global wall_x, wall_y, end
+    global wall_x, wall_y
     screen.clear()
     screen.fill('lightblue')
     #acessar cada linha por coluna para rendenizar as paredes 
@@ -147,7 +147,7 @@ def draw():
         # ele atinge uma face vertical ou horizontal desta
 
 def update():
-    global wall_x, wall_y, end
+    global wall_x, wall_y
     dx = player.width / 2
     dy = player.height / 2
     
@@ -176,7 +176,7 @@ def update():
     #end = (player.x + math.cos(player.angle)*200, player.y + math.sin(player.angle)*200) #update para que o "fim" do vetor aponte para onde o jogador está 'olhando'
 
 # Lançar vários ângulos (com NUM_RAY) - FEITO
-# encontrar parede(função paramedir depth e depth) - 
+# encontrar parede(função paramedir depth e depth) - FEITO
 # desenhar os novos vetores e armazenar distância
 
 pgzrun.go()

@@ -2,8 +2,12 @@ import os
 #posição da janela:
 os.environ['SDL_VIDEO_WINDOW_POS'] = "center"
 
+import pygame
 import pgzrun
 import math
+
+pygame.mouse.set_visible(False)
+pygame.event.set_grab(True)
 
 TITLE = "Tentando Raycasting"
 TILE_SIZE = 55
@@ -197,13 +201,6 @@ def draw():
         y = HEIGHT/2 - h/2
         rect_screen = Rect(x, y, column_width+2, h)
         screen.draw.filled_rect(rect_screen, (120,120,255))
-        
-    if side == True:
-        color = (0, 0, 255)
-        screen.draw.filled_rect(rect_screen, color)
-    if side == False:
-        color = (0, 255, 0)
-        screen.draw.filled_rect(rect_screen, color)
 
 def update():
     cos_a = math.cos(player.angle)
@@ -221,9 +218,15 @@ def update():
         player_posy -= sin_a * player.vel
         player_posx -= cos_a * player.vel
     if keyboard.d:
-        player.angle += math.pi/180 #atualização do ângulo (vetor) qual "aponta" para a direção que o player olha
+        player_posx -= sin_a*player.vel
+        player_posy += cos_a*player.vel
     if keyboard.a:
-        player.angle -= math.pi/180
+        player_posx += sin_a*player.vel
+        player_posy -= cos_a*player.vel
+    
+    mouse_dx, mouse_dy = pygame.mouse.get_rel()
+    player.angle += mouse_dx * 0.002
+    player.angle -= mouse_dy * 0.002
 
     if not (has_wall(player_posx-dx, player.y-dy) or has_wall(player_posx+dx, player.y-dy) or
     has_wall(player_posx+dx, player.y+dy) or has_wall(player_posx-dx, player.y+dy)):

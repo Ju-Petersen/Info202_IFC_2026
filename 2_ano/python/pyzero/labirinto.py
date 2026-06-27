@@ -46,11 +46,9 @@ maze = [
 # cada caracter do labirinto será desenhado VEZES o tamanho da ESCALA
 ESCALA = 30
 
-# largura da tela: largura do labirinto VEZES o tamanho da ESCALA
+# antigo - (largura da tela: largura do labirinto VEZES o tamanho da ESCALA)
 WIDTH = 500
-
-# altura do labirinto: quantidade de elementos no vetor do labirinto (linhas)
-# VEZES a ESCALA
+# antigo - (altura do labirinto: quantidade de elementos no vetor do labirinto (linhas) VEZES a ESCALA)
 HEIGHT = 500
 
 #Para adicionar câmera no labirinto:
@@ -225,34 +223,20 @@ def draw():
 
     # percorrer as linhas do labirinto
     for row in range(len(maze)):
-
         # percorrer as colunas do labirinto
         for col in range(len(maze[row])):
 
             # se for parede...
             if maze[row][col] == "#":
                 # desenha parede :-)
-                wall = Rect(
-                    (col * ESCALA - camera_x, #desenhando as paredes conforme a câmera
-                     row * ESCALA - camera_y),
-                    (ESCALA, ESCALA)
-                )
-                screen.draw.filled_rect(
-                    wall,
-                    (100, 100, 100)
-                )
+                #desenhando as paredes conforme a câmera
+                wall = Rect((col * ESCALA - camera_x, row * ESCALA - camera_y), (ESCALA, ESCALA))
+                screen.draw.filled_rect(wall, (100, 100, 100))
             # Se for a "chegada"
             if maze[row][col] == "G":
                 # desenha chegada :-)
-                wall = Rect(
-                    (col * ESCALA - camera_x, #desenhando as paredes conforme a câmera
-                     row * ESCALA - camera_y),
-                    (ESCALA, ESCALA)
-                )
-                screen.draw.filled_rect(
-                    wall,
-                    (0, 100, 0)
-                )
+                wall = Rect((col * ESCALA - camera_x, row * ESCALA - camera_y), (ESCALA, ESCALA))
+                screen.draw.filled_rect(wall,(0, 100, 0))
 
     # desenha o jogador
     player_screen = Rect((player.x - camera_x, player.y - camera_y), (player.width, player.height))

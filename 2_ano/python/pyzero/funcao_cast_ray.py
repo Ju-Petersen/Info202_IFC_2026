@@ -1,6 +1,6 @@
 from raycast import *
 
-# função p/encontrar parede ('lançar' raio) antiga: (iteração por pixel)
+# função p/encontrar parede ('lançar' raio) - antigo
 def cast_ray(angle):
     # modificando para usar a iteração por TILE, ao invés de pixels
     x = player.x
@@ -27,3 +27,17 @@ def cast_ray(angle):
             # maior que o a B pixels de distância (considerando A < B)
             # essa profundiade é feita pelo desenho da altura inversamente proporcional
             return (hit_x, hit_y, depth, tile_x, tile_y, offset_x, offset_y)
+
+# acessar cada linha por coluna para rendenizar as paredes - antigo
+    for r in range(len(map)):
+        for c in range(len(map[0])):
+            # encontrar as coordenadas do tile
+            tile_x = c * TILE_SIZE - 1 # loop colunas
+            tile_y = r * TILE_SIZE - 1 # loop linhas
+            # verificar se é True ou False:
+            if map[r][c] == 1:
+                TILE.topleft = tile_x, tile_y # lembrar de definir a posição!!!
+                #screen.draw.filled_rect(TILE, BLUE) #desenhar o tile para teste
+            elif map[r][c] == 0:
+                TILE.topleft = tile_x, tile_y #tyle_y = r * TILE_SIZE - 1 e tyle_x = c * TILE_SIZE - 1
+                #screen.draw.rect(TILE, WHITE) #desenhar o tile para teste

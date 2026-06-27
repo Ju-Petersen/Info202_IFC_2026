@@ -240,7 +240,7 @@ def update():
 
 # Lançar vários ângulos (com NUM_RAY) - FEITO
 # encontrar parede(função paramedir depth e depth) - FEITO
-# desenhar os novos vetores e armazenar distância
-# IMPLEMENTAÇÃO DDA !!!!!!!!!!!!!
+# desenhar os novos vetores e armazenar distância - FEITO
+# IMPLEMENTAÇÃO DDA - FEITO
 
 pgzrun.go()

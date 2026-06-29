@@ -5,6 +5,8 @@ os.environ['SDL_VIDEO_WINDOW_POS'] = "center"
 import pygame
 import pgzrun
 import math
+import random
+from collections import deque
 
 pygame.mouse.set_visible(False)
 pygame.event.set_grab(True)
@@ -20,7 +22,7 @@ ROWS = 14
 COLS = 25
 
 # no "for" abaixo, o "c" dá um loop pelas colunas, e "r" por cada linha
-map = [
+world_map = [
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -37,16 +39,16 @@ map = [
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ]
 
-WIDTH = len(map[0]) * TILE_SIZE
-HEIGHT = len(map) * TILE_SIZE
+WIDTH = len(world_map[0]) * TILE_SIZE
+HEIGHT = len(world_map) * TILE_SIZE
 
 FOV = math.radians(60) # campo de visão, 60°
 RES = 4 # resolução p/ rendenização
 NUM_RAYS = WIDTH // RES # raios (vetores) que serão 'desenhados' a partir do movimento do player#0 são espaçoes vazios e 1 são as
 DIST_PLANO = WIDTH / (2 * math.tan(FOV/2))
 
+PLAYER_SPEED = 2.0
 player = Actor('circulo.png', anchor=('center', 'center'))
-player.vel = 1.5
 player.angle = 0.0 #o centro de rotação é o ponto âncora e ângulo em rad
 
 def has_wall(x, y):
@@ -58,11 +60,99 @@ def has_wall(x, y):
     if col < 0 or col >= COLS:
         return 1
 
-    return map[row][col]
+    return world_map[row][col]
 
 player.pos = TILE_SIZE*2, TILE_SIZE*2
 if has_wall(player.x, player.y):
     player.pos = (TILE_SIZE*2) - 2, (TILE_SIZE*2) - 2
+
+def random_pos():
+    free_space = []
+
+    for row in range(len(world_map)):
+        for col in range(len(world_map[row])):
+            if world_map[row][col] == 0:
+                free_space.append((col, row))
+    
+    if not free_space:
+        return None
+    col, row = random.choice(free_space)
+
+    x = col * TILE_SIZE / 2
+    y = row * TILE_SIZE / 2
+
+    return x, y
+
+# inimigo
+x, y = random_pos()
+enemy = Actor('fantasma', anchor=('center', 'center'))
+enemy.pos = random_pos()
+enemy.vel = 1.0
+enemy_timer = 0
+
+def bfs(start, goal):
+    queue = deque([start])
+    visited = {start}
+    parent = {}
+
+    while queue:
+        current = queue.popleft()
+
+        if current == goal:
+            path = []
+
+            while current != start:
+                path.append(current)
+                current = parent[current]
+
+            path.reverse()
+            return path
+
+        row, col = current
+
+        for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]:
+            nr = row + dr
+            nc = col + dc
+
+            if (
+                0 <= nr < len(world_map)
+                and 0 <= nc < len(world_map[0])
+                and world_map[nr][nc] != 1
+                and (nr, nc) not in visited
+            ):
+                visited.add((nr, nc))
+                parent[(nr, nc)] = current
+                queue.append((nr, nc))
+
+    return []
+
+def move_enemy():
+    en_row = int(enemy.y // TILE_SIZE)
+    en_col = int(enemy.x // TILE_SIZE)
+
+    player_row = int(player.y // TILE_SIZE)
+    player_col = int(player.x // TILE_SIZE)
+    
+    path = bfs((en_col, en_row), (player_col, player_row))
+
+    if not path:
+        return
+    
+    next_row, next_col = path[0]
+
+    target_x = next_col * TILE_SIZE + TILE_SIZE / 2
+    target_y = next_row * TILE_SIZE + TILE_SIZE / 2
+
+    dx = target_x - enemy.x
+    dy = target_y - enemy.y
+
+    dist = math.hypot(dx, dy)
+
+    if dist > enemy.vel:
+        enemy.x += dx / dist * enemy.vel
+        enemy.y += dy / dist * enemy.vel
+    else:
+        enemy.pos = (target_x, target_y)
 
 # Implementação DDA:
 
@@ -142,8 +232,9 @@ def cast_ray(angle):
             side = 1 # se for no eixo y, lado = False (afinal, é vertical)
         if not (0 <= map_x < COLS and 0 <= map_y < ROWS):
             break
-        if map[map_y][map_x]:
+        if world_map[map_y][map_x]:
             hit = True
+    
     # profundidade e ponto de colisão:
     if side == 0:
         wall_depth = (map_x - x + (1-step_x) / 2)/ray_x
@@ -177,7 +268,7 @@ def draw():
     raio 0 -> coluna 0
     raio 1 -> coluna 5
     raio 2 -> coluna 10'''
-    screen.draw.filled_rect(Rect(0, 0, WIDTH, HEIGHT//2), (120,170,255))
+    screen.draw.filled_rect(Rect(0, 0, WIDTH, HEIGHT), (120,170,255))
     screen.draw.filled_rect(Rect(0, HEIGHT//2, WIDTH, HEIGHT//2), (80,80,80))
     
     for alt, depth in enumerate(rays):
@@ -187,8 +278,29 @@ def draw():
         y = HEIGHT/2 - h/2
         rect_screen = Rect(x, y, column_width+2, h)
         screen.draw.filled_rect(rect_screen, (120,120,255))
+        
+    dx_enemy = enemy.x - player.x # encontrar o vetor entre inimigo e player
+    dy_enemy = enemy.y - player.y
+    dist = math.hypot(dx_enemy, dy_enemy) # distância entre ambos
+    en_angle = math.atan2(dx_enemy, dy_enemy) # direção do inimigo (onde ele "olha")
+    
+    delta_enemy = en_angle - player.angle # variação do en_angle
+    while delta_enemy > math.pi: # limitação dos ângulos
+         delta_enemy -= 2*math.pi
+
+    while delta_enemy < -math.pi: # limitação dos ângulos
+        delta_enemy += 2*math.pi
+    
+    if abs(delta_enemy) < FOV/2:
+        enemy.draw()
+    
+    screen_x = (delta_enemy / FOV + 0.5) * WIDTH
+    
+    
 
 def update():
+    global enemy_timer
+    
     cos_a = math.cos(player.angle)
     sin_a = math.sin(player.angle)
     dx = player.width / 2
@@ -196,23 +308,30 @@ def update():
     
     player_posx = player.x # posição futura
     player_posy = player.y # posição futura
-
+        
     if keyboard.w:
-        player_posy += sin_a * player.vel #anda em x ou y de acordo com a direção que o player "olha"
-        player_posx += cos_a * player.vel
+        player_posy += sin_a * PLAYER_SPEED #anda em x ou y de acordo com a direção que o player "olha"
+        player_posx += cos_a * PLAYER_SPEED
     if keyboard.s:
-        player_posy -= sin_a * player.vel
-        player_posx -= cos_a * player.vel
+        player_posy -= sin_a * PLAYER_SPEED
+        player_posx -= cos_a * PLAYER_SPEED
     if keyboard.d:
-        player_posx -= sin_a*player.vel
-        player_posy += cos_a*player.vel
+        player_posx -= sin_a * PLAYER_SPEED
+        player_posy += cos_a * PLAYER_SPEED
     if keyboard.a:
-        player_posx += sin_a*player.vel
-        player_posy -= cos_a*player.vel
+        player_posx += sin_a * PLAYER_SPEED
+        player_posy -= cos_a * PLAYER_SPEED
     
     mouse_dx, mouse_dy = pygame.mouse.get_rel()
     player.angle += mouse_dx * 0.002
-    player.angle -= mouse_dy * 0.002
+    
+    enemy_timer += 1
+
+    if enemy_timer >= 15:
+        move_enemy()
+        enemy_timer = 0
+    if enemy.colliderect(player):
+        quit()
 
     if not (has_wall(player_posx-dx, player.y-dy) or has_wall(player_posx+dx, player.y-dy) or
     has_wall(player_posx+dx, player.y+dy) or has_wall(player_posx-dx, player.y+dy)):

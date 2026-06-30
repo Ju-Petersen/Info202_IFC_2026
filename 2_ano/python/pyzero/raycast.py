@@ -2,8 +2,15 @@ import os
 #posição da janela:
 os.environ['SDL_VIDEO_WINDOW_POS'] = "center"
 
-import pygame
 import pgzrun
+from pgzero.actor import Actor
+from pgzero.rect import Rect
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    import pygame
+    screen: pygame.Surface
+
 import math
 import random
 from collections import deque
@@ -47,7 +54,7 @@ RES = 4 # resolução p/ rendenização
 NUM_RAYS = WIDTH // RES # raios (vetores) que serão 'desenhados' a partir do movimento do player#0 são espaçoes vazios e 1 são as
 DIST_PLANO = WIDTH / (2 * math.tan(FOV/2))
 
-PLAYER_SPEED = 2.0
+PLAYER_SPEED = 1.5
 player = Actor('circulo.png', anchor=('center', 'center'))
 player.angle = 0.0 #o centro de rotação é o ponto âncora e ângulo em rad
 
@@ -90,6 +97,7 @@ enemy.pos = random_pos()
 enemy.vel = 1.0
 enemy_timer = 0
 
+# Comentar bfs!!!!!!!!!!!!!!!!!!!!!!
 def bfs(start, goal):
     queue = deque([start])
     visited = {start}
@@ -126,6 +134,7 @@ def bfs(start, goal):
 
     return []
 
+# Entender melhor move_enemy !!!!!!!!!!!!!!!!!!!!!!!!!
 def move_enemy():
     en_row = int(enemy.y // TILE_SIZE)
     en_col = int(enemy.x // TILE_SIZE)
@@ -163,7 +172,8 @@ def cast_ray(angle):
     # em pixel do player serão contadas a partir de TILE_SIZE
     x = player.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
     y = player.y / TILE_SIZE
-    '''A iteração da fução cast_ray antiga percorria cada pixel:
+    '''
+    A iteração da fução cast_ray antiga percorria cada pixel:
 
         while True:
                 x += math.cos(angle)*step --> step = 1 (a cada movimento, adicionava um passo)
@@ -178,7 +188,8 @@ def cast_ray(angle):
     +--\----+------+------+ Cada retângulo nesse exemplo é uma célula,
     |   \   |      |      | se não há uma parede nesta, ele "pula" para a próxima.
     |       |      | #####|
-    +------+-------+------+'''
+    +------+-------+------+
+    '''
     # posição atual e futura:
     map_x = int(x)
     map_y = int(y)
@@ -208,7 +219,8 @@ def cast_ray(angle):
             +--\----+------+------+ sendo que "side_depth" sempre aumenta até o player chegar a última coluna.
             |   \   |      |      | Ou simplesmente aos limites do mapa.
             |       |      | #####| Logo, uma PA de razão "delta_depyh".
-            +------+------+-------+'''
+            +------+------+-------+
+            '''
     else:
         step_x = 1
         side_depth_x = (map_x + 1-x)*delta_depth_x
@@ -295,8 +307,9 @@ def draw():
         enemy.draw()
     
     screen_x = (delta_enemy / FOV + 0.5) * WIDTH
-    
-    
+
+    # Implementar a lógica do inimigo parecida com o cast_ray das paredes,
+    # podendo mostrá-lo quando o FOV do player "enquadra" o inimigo.
 
 def update():
     global enemy_timer

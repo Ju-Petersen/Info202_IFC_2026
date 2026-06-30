@@ -7,10 +7,16 @@ os.environ['SDL_VIDEO_CENTERED'] = '1'
 # somente depois do comando acima, 
 # importar o módulo pgzrun para rodar o jogo
 import pgzrun
-
+import pygame
+from pgzero.actor import Actor
+from pgzero.rect import Rect
 # outras bibliotecas auxiliares
 from random import randint
-import pygame
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    import pygame
+    screen: pygame.Surface
 
 # definir largura e altura da janela
 WIDTH = 1200
@@ -36,7 +42,7 @@ passo_cacador = 1
 alvos = []
 
 # cria alguns alvos em posições aleatórias
-for i in range(3):
+for i in range(2):
     # criar um novo alvo
     ob = Actor('ponto.png')
     # definir posição aleatória do alvo

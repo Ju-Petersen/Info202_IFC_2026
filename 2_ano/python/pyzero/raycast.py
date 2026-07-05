@@ -2,6 +2,7 @@ import os
 #posição da janela:
 os.environ['SDL_VIDEO_WINDOW_POS'] = "center"
 
+import pygame
 import pgzrun
 from pgzero.actor import Actor
 from pgzero.rect import Rect
@@ -85,15 +86,16 @@ def random_pos():
         return None
     col, row = random.choice(free_space)
 
-    x = col * TILE_SIZE / 2
-    y = row * TILE_SIZE / 2
+    x = col * TILE_SIZE + TILE_SIZE / 2
+    y = row * TILE_SIZE + TILE_SIZE / 2
 
     return x, y
 
 # inimigo
 x, y = random_pos()
-enemy = Actor('fantasma', anchor=('center', 'center'))
+enemy = Actor('fantasma.png', anchor=('center', 'center'))
 enemy.pos = random_pos()
+enemy_img = pygame.image.load('2_ano/python/pyzero/images/fantasma.png').convert_alpha()
 enemy.vel = 1.0
 enemy_timer = 0
 
@@ -116,7 +118,7 @@ def bfs(start, goal):
             path.reverse()
             return path
 
-        row, col = current
+        col, row = current
 
         for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]:
             nr = row + dr
@@ -293,20 +295,30 @@ def draw():
         
     dx_enemy = enemy.x - player.x # encontrar o vetor entre inimigo e player
     dy_enemy = enemy.y - player.y
-    dist = math.hypot(dx_enemy, dy_enemy) # distância entre ambos
-    en_angle = math.atan2(dx_enemy, dy_enemy) # direção do inimigo (onde ele "olha")
-    
+    en_angle = math.atan2(dy_enemy, dx_enemy) # direção do inimigo (onde ele "olha")
     delta_enemy = en_angle - player.angle # variação do en_angle
+    
     while delta_enemy > math.pi: # limitação dos ângulos
          delta_enemy -= 2*math.pi
 
     while delta_enemy < -math.pi: # limitação dos ângulos
         delta_enemy += 2*math.pi
     
-    if abs(delta_enemy) < FOV/2:
-        enemy.draw()
+    en_depth = math.hypot(dy_enemy, dx_enemy) # distância entre ambos
+    en_dist = en_depth * math.cos(delta_enemy)
     
-    screen_x = (delta_enemy / FOV + 0.5) * WIDTH
+    if abs(delta_enemy) < FOV/2:
+        en_height = (TILE_SIZE * DIST_PLANO) / en_dist
+        en_width = en_height
+        screen_x = (delta_enemy / FOV + 0.5) * WIDTH
+        screen_y = HEIGHT/2 - en_height/2
+        
+        ray = int(screen_x / column_width)
+
+        if 0 <= ray < len(rays):
+            if en_dist < rays[ray]:
+                en_screen = pygame.transform.scale(enemy_img, (int(en_width), int(en_height)))
+                screen.surface.blit(en_screen, (screen_x - en_width/2, screen_y))
 
     # Implementar a lógica do inimigo parecida com o cast_ray das paredes,
     # podendo mostrá-lo quando o FOV do player "enquadra" o inimigo.

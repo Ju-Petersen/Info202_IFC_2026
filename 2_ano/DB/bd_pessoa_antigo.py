@@ -1,4 +1,5 @@
 import mysql.connector
+
 class Pessoa:
     def __init__(self, nm, dt_nasc, cpf, em):
         self.nome = nm

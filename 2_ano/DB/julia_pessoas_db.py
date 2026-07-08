@@ -1,15 +1,15 @@
-from pessoa_classe import Pessoa
+from pessoas_classe import Pessoa
 
 # conectar ao db
-import mysql.connection
+import mysql.connector
 
 def retornar_pessoas():
 
     # conectar ao servidor MySQL com usuário e senha root
     conn = mysql.connector.connect(
         host="10.10.34.239",
-        user="",
-        password=""
+        user="root",
+        password="root"
     )
 
     # criar um cursor para executar comandos SQL
@@ -28,10 +28,10 @@ def retornar_pessoas():
     retorno = []
 
     # percorrer a lista de pessoas obtidas
-    for pessoa in pessoas:
+    for p in pessoas:
 
         # converter cada pessoa obtida em um OBJETO
-        nova = Pessoa(pessoa[0], pessoa[1], pessoa[2])
+        nova = Pessoa(p[0], p[1], p[2])
 
         # adicionar a nova pessoa_objeto na lista de retorno
         retorno.append(nova)

@@ -78,104 +78,111 @@ def random_pos():
     # os espaços livres são uma lista que retorna uma posição de spawn p/ o inimigo
     free_space = []
 
-    # acessa as posições 0 na grid do mapa:
+    # acessa as posições na grid do mapa:
     for row in range(len(world_map)):
-        for col in range(len(world_map[row])):
+        for col in range(len(world_map[row])): # verifica se a linha tem um tile 0:
             if world_map[row][col] == 0: # 0 são os espaços livres (que não tem parede)
                 free_space.append((col, row))
     
     if not free_space:
         return None
-    col, row = random.choice(free_space) # escolhe um espaço 0 para spawnar o inimigo
-
-    x = col * TILE_SIZE + TILE_SIZE / 2
+    row, col = random.choice(free_space) # escolhe um espaço 0 para spawnar o inimigo
+    
     y = row * TILE_SIZE + TILE_SIZE / 2
+    x = col * TILE_SIZE + TILE_SIZE / 2
 
-    return x, y # retorna a posição aleatória
+    return y, x # retorna a posição aleatória
 
 # inimigo
-x, y = random_pos()
+y, x = random_pos()
 enemy = Actor('fantasma.png', anchor=('center', 'center'))
 enemy.pos = random_pos()
 enemy_img = pygame.image.load('2_ano/python/pyzero/images/fantasma.png').convert_alpha()
-enemy.vel = 1.0
+enemy.vel = 5.0
 enemy_timer = 0
 
 # Comentar bfs!!!!!!!!!!!!!!!!!!!!!!
 def bfs(start, goal):
-    queue = deque([start])
-    visited = {start}
-    parent = {}
+    queue = deque([start]) # posições futuras do inimigo
+    visited = {start} # posições passadas
+    parent = {} # posições alcançadas
 
-    while queue:
-        current = queue.popleft()
+    while queue: # enquanto as posições futuras ainda não foram alcançadas (ainda há locais p/ "andar")
+        current = queue.popleft() # retira a primeira posição da lista
 
-        if current == goal:
+        if current == goal: 
+            # a posição a ser explorada é a mais antiga da lista, 
+            # por isso a remoção do primeiro item:
+            '''[(0, 0), (0,1), (1,0)]
+                current = (0,0)
+                nova lista:
+                [(0,1), (1,0)]'''
             path = []
 
             while current != start:
                 path.append(current)
-                current = parent[current]
+                current = parent[current] # como o caminho "acaba" quando se verifica o dicionário armazena onde o inimigo já procurou
 
-            path.reverse()
+            path.reverse() # o caminho fica de trás para frente, por isso o reverse
             return path
 
-        col, row = current
+        row, col = current
 
-        for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]:
-            nr = row + dr
+        for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]: # explora a possibilidade das posições vizinhas
+            nr = row + dr # e define as novas posições
             nc = col + dc
 
-            if (
-                0 <= nr < len(world_map)
-                and 0 <= nc < len(world_map[0])
-                and world_map[nr][nc] != 1
-                and (nr, nc) not in visited
-            ):
+            if (0 <= nr < len(world_map) and 0 <= nc < len(world_map[0])
+                and world_map[nr][nc] != 1 and (nr, nc) not in visited):
+                # esse if verifica se aposição já foi passada e se é parede
                 visited.add((nr, nc))
-                parent[(nr, nc)] = current
-                queue.append((nr, nc))
+                parent[(nr, nc)] = current # chegou a posição (y, x) a partir da posição (y1, x1)
+                queue.append((nr, nc)) # se as condições forem prenchidas as novas posições são definidas
 
     return []
 
 # Entender melhor move_enemy !!!!!!!!!!!!!!!!!!!!!!!!!
 def move_enemy():
+    # encontrar inimigo:
     en_row = int(enemy.y // TILE_SIZE)
     en_col = int(enemy.x // TILE_SIZE)
-
+    # e encontrar player:
     player_row = int(player.y // TILE_SIZE)
     player_col = int(player.x // TILE_SIZE)
     
-    path = bfs((en_col, en_row), (player_col, player_row))
+    # traça o caminho entre inimigo e player
+    path = bfs((en_row, en_col), (player_row, player_col))
 
     if not path:
         return
     
-    next_row, next_col = path[0]
+    next_row, next_col = path[0] 
+    # informa o caminho futuro, e divide a lista 
+    # devolvendo apenas uma coordenada por frame ao inimigo
 
-    target_x = next_col * TILE_SIZE + TILE_SIZE / 2
+    target_x = next_col * TILE_SIZE + TILE_SIZE / 2 # e o "alvo" (player) nesse caminho futuro
     target_y = next_row * TILE_SIZE + TILE_SIZE / 2
+    
+    dy = target_y - enemy.y # coordenadas em pixels
+    dx = target_x - enemy.x # e o quanto falta para chegar até o alvo
 
-    dx = target_x - enemy.x
-    dy = target_y - enemy.y
-
-    dist = math.hypot(dx, dy)
-
+    dist = math.hypot(dy, dx)
+    # calcula a distância real (acima)
     if dist > enemy.vel:
+        enemy.y += dy / dist * enemy.vel # e move o inimigo de acordo com a velocidade e dist
         enemy.x += dx / dist * enemy.vel
-        enemy.y += dy / dist * enemy.vel
-    else:
-        enemy.pos = (target_x, target_y)
+    else: # caso falte menos que a velocidade p/ chegar ao alvo
+        enemy.pos = (target_y, target_x) # evita teleportar o inimigo
 
 # Implementação DDA:
 
 def cast_ray(angle):
-    ray_x = math.cos(angle)
     ray_y = math.sin(angle)
+    ray_x = math.cos(angle)
     # a partir das coordenadas do raio, as coordenadas 
     # em pixel do player serão contadas a partir de TILE_SIZE
-    x = player.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
     y = player.y / TILE_SIZE
+    x = player.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
     '''
     A iteração da fução cast_ray antiga percorria cada pixel:
 
@@ -195,10 +202,14 @@ def cast_ray(angle):
     +------+-------+------+
     '''
     # posição atual e futura:
-    map_x = int(x)
     map_y = int(y)
+    map_x = int(x)
     # calcular delta de "depth" para mostrar quanto o vetor precisa 
     # percorrer até chegar a próxima célula
+    if ray_y == 0:
+        delta_depth_y = 1e30
+    else:
+        delta_depth_y  = abs(1/ray_y)
     if ray_x == 0: # vai verificar o quanto precisa andar até chegar a próxima coluna
         delta_depth_x = 1e30 
         # considerar o delta da distância x e y por conta dos ângulos, 
@@ -206,10 +217,6 @@ def cast_ray(angle):
         # tempo p/ o vetor atravessá-lo
     else:
         delta_depth_x  = abs(1/ray_x)
-    if ray_y == 0:
-        delta_depth_y = 1e30
-    else:
-        delta_depth_y  = abs(1/ray_y)
     # sentido do vetor:
     if ray_x < 0:
         step_x = -1
@@ -260,9 +267,9 @@ def cast_ray(angle):
     # a profundidade é "desenhada", ou melhor, convertida em pixels
     depth = wall_depth * TILE_SIZE
     depth *= math.cos(angle-player.angle)
-        
-    hit_x = player.x + ray_x * depth
+    
     hit_y = player.y + ray_y * depth
+    hit_x = player.x + ray_x * depth
         
     return depth, hit_x, hit_y, side
 
@@ -359,13 +366,14 @@ def update():
         enemy_timer = 0
     if enemy.colliderect(player):
         quit()
-
-    if not (has_wall(player_posx-dx, player.y-dy) or has_wall(player_posx+dx, player.y-dy) or
-    has_wall(player_posx+dx, player.y+dy) or has_wall(player_posx-dx, player.y+dy)):
-        player.x = player_posx
+    
     # testa movimento em Y
     if not (has_wall(player.x-dx, player_posy-dy) or has_wall(player.x+dx, player_posy-dy) or
     has_wall(player.x+dx, player_posy+dy) or has_wall(player.x-dx, player_posy+dy)):
         player.y = player_posy
+    # movimento em X
+    if not (has_wall(player_posx-dx, player.y-dy) or has_wall(player_posx+dx, player.y-dy) or
+    has_wall(player_posx+dx, player.y+dy) or has_wall(player_posx-dx, player.y+dy)):
+        player.x = player_posx
 
 pgzrun.go()

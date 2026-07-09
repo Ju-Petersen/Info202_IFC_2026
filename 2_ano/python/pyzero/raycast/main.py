@@ -101,6 +101,8 @@ enemy_img = pygame.image.load('2_ano/python/pyzero/images/fantasma.png').convert
 enemy.vel = 5.0
 enemy_timer = 0
 
+# adicionar "estados p/ o inimigo"
+
 # Comentar bfs!!!!!!!!!!!!!!!!!!!!!!
 def bfs(start, goal):
     queue = deque([start]) # posições futuras do inimigo
@@ -140,8 +142,65 @@ def bfs(start, goal):
                 queue.append((nr, nc)) # se as condições forem prenchidas as novas posições são definidas
 
     return []
+# Implementar FOV e raycast do inimigo (possibilita o inimigo "parar de ver" o player):
+def see_player(angle):
+    ray_y = math.sin(angle)
+    ray_x = math.cos(angle)
+     # a partir das coordenadas do raio, as coordenadas 
+     # em pixel do player serão contadas a partir de TILE_SIZE
+    y = player.y / TILE_SIZE
+    x = player.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
+    # posição atual e futura:
+    map_y = int(y)
+    map_x = int(x)
+     # calcular delta de "depth" para mostrar quanto o vetor precisa 
+     # percorrer até chegar a próxima célula
+    if ray_y == 0:
+        delta_depth_y = 1e30
+    else:
+        delta_depth_y  = abs(1/ray_y)
+    if ray_x == 0: # vai verificar o quanto precisa andar até chegar a próxima coluna
+        delta_depth_x = 1e30 
+        # considerar o delta da distância x e y por conta dos ângulos, 
+        # ou seja, conforme um ângulo é mais reto ou diagonal leva mais 
+        # tempo p/ o vetor atravessá-lo
+    else:
+        delta_depth_x  = abs(1/ray_x)
+    # sentido do vetor:
+    if ray_x < 0:
+        step_x = -1
+        # a distância inicial em "delta_depth" é fixa, porém a direção entre cada linha é variável:
+        side_depth_x = (x - map_x)*delta_depth_x 
+    else:
+        step_x = 1
+        side_depth_x = (map_x + 1-x)*delta_depth_x
+    if ray_y < 0:
+       step_y = -1
+       side_depth_y = (y - map_y)*delta_depth_y
+    else:
+        step_y = 1
+        side_depth_y = (map_y + 1-y)*delta_depth_y
+    
+    hit = False
+    
+    while not hit:
+        if side_depth_x < side_depth_y:
+             side_depth_x += delta_depth_x
+             map_x += step_x # qual coluna está percorrendo
+             side = 0 # se for no eixo x, lado = True
+        else:
+         side_depth_y += delta_depth_y
+         map_y += step_y
+         side = 1 # se for no eixo y, lado = False (afinal, é vertical)
+        if not (0 <= map_x < COLS and 0 <= map_y < ROWS):
+            break
+        if world_map[map_y][map_x]:
+            hit = True
+    
+    if has_wall(enemy.x, enemy.y):
+        False
+    # elif :
 
-# Entender melhor move_enemy !!!!!!!!!!!!!!!!!!!!!!!!!
 def move_enemy():
     # encontrar inimigo:
     en_row = int(enemy.y // TILE_SIZE)
@@ -151,7 +210,7 @@ def move_enemy():
     player_col = int(player.x // TILE_SIZE)
     
     # traça o caminho entre inimigo e player
-    path = bfs((en_row, en_col), (player_row, player_col))
+    path = bfs((en_row, en_col), (player_row, player_col)) # armazenar em lista para otimizar o cálculo do caminho
 
     if not path:
         return
@@ -169,10 +228,12 @@ def move_enemy():
     dist = math.hypot(dy, dx)
     # calcula a distância real (acima)
     if dist > enemy.vel:
-        enemy.y += dy / dist * enemy.vel # e move o inimigo de acordo com a velocidade e dist
-        enemy.x += dx / dist * enemy.vel
+        enemy.y += (dy - enemy.y) / dist * enemy.vel # e move o inimigo de acordo com a velocidade e dist
+        enemy.x += (dx - enemy.x) / dist * enemy.vel
     else: # caso falte menos que a velocidade p/ chegar ao alvo
         enemy.pos = (target_y, target_x) # evita teleportar o inimigo
+    
+    enemy.angle = math.atan2(dy, dx)
 
 # Implementação DDA:
 
@@ -304,7 +365,7 @@ def draw():
         
     dx_enemy = enemy.x - player.x # encontrar o vetor entre inimigo e player
     dy_enemy = enemy.y - player.y
-    en_angle = math.atan2(dy_enemy, dx_enemy) # direção do inimigo (onde ele "olha")
+    en_angle = math.atan2(dy_enemy, dx_enemy) # direção do inimigo (onde ele "olha") -------------------
     delta_enemy = en_angle - player.angle # variação do en_angle
     
     while delta_enemy > math.pi: # limitação dos ângulos
@@ -366,6 +427,8 @@ def update():
         enemy_timer = 0
     if enemy.colliderect(player):
         quit()
+    if see_player():
+        move_enemy()
     
     # testa movimento em Y
     if not (has_wall(player.x-dx, player_posy-dy) or has_wall(player.x+dx, player_posy-dy) or

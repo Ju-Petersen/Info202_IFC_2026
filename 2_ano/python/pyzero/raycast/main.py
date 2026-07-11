@@ -91,10 +91,10 @@ def random_pos():
     y = row * TILE_SIZE + TILE_SIZE / 2
     x = col * TILE_SIZE + TILE_SIZE / 2
 
-    return y, x # retorna a posição aleatória
+    return x, y # retorna a posição aleatória
 
 # inimigo
-y, x = random_pos()
+x, y = random_pos()
 enemy = Actor('fantasma.png', anchor=('center', 'center'))
 enemy.pos = random_pos()
 enemy_img = pygame.image.load('2_ano/python/pyzero/images/fantasma.png').convert_alpha()
@@ -143,13 +143,19 @@ def bfs(start, goal):
 
     return []
 # Implementar FOV e raycast do inimigo (possibilita o inimigo "parar de ver" o player):
-def see_player(angle):
-    ray_y = math.sin(angle)
-    ray_x = math.cos(angle)
+def can_see_player(enemy, player):
+    #colocar o DDA
+    dx_enemy = player.x - enemy.x # encontrar o vetor entre inimigo e player
+    dy_enemy = player.y - enemy.y
+    dist_to_player = math.hypot(dy_enemy, dx_enemy) # direção do inimigo (onde ele "olha") -------------------
+    en_angle = math.atan2(dy_enemy, dx_enemy)
+    
+    ray_y = math.sin(en_angle)
+    ray_x = math.cos(en_angle)
      # a partir das coordenadas do raio, as coordenadas 
      # em pixel do player serão contadas a partir de TILE_SIZE
-    y = player.y / TILE_SIZE
-    x = player.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
+    y = enemy.y / TILE_SIZE
+    x = enemy.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
     # posição atual e futura:
     map_y = int(y)
     map_x = int(x)
@@ -181,25 +187,45 @@ def see_player(angle):
         step_y = 1
         side_depth_y = (map_y + 1-y)*delta_depth_y
     
-    hit = False
-    
-    while not hit:
+    while True:
         if side_depth_x < side_depth_y:
-             side_depth_x += delta_depth_x
-             map_x += step_x # qual coluna está percorrendo
-             side = 0 # se for no eixo x, lado = True
+            wall_depth = side_depth_x
+            side_depth_x += delta_depth_x
+            map_x += step_x
         else:
-         side_depth_y += delta_depth_y
-         map_y += step_y
-         side = 1 # se for no eixo y, lado = False (afinal, é vertical)
+            wall_depth = side_depth_y
+            side_depth_y += delta_depth_y
+            map_y += step_y
+        
         if not (0 <= map_x < COLS and 0 <= map_y < ROWS):
-            break
+            return False
         if world_map[map_y][map_x]:
-            hit = True
-    
-    if has_wall(enemy.x, enemy.y):
-        False
-    # elif :
+            return False
+        
+        en_depth = wall_depth * TILE_SIZE
+        if en_depth >= dist_to_player:
+            return True
+
+def get_enemy_fov(enemy, player): # ângulo do inimigo
+    dx_en = player.x - enemy.x
+    dy_en = player.y - enemy.y
+
+    angle_to_player = math.atan2(dy_en, dx_en) # direção do inimigo (onde ele "olha") -------------------
+
+    delta_enemy = angle_to_player - enemy.angle 
+    # calcular delta entre o ângulo do inimigo e seu ângulo em relação ao player, 
+    # para mostrar quanto o vetor precisa
+    # percorrer até chegar a próxima célula
+
+    while delta_enemy > math.pi: 
+        # usando o ângulo qual o inimigo olha, e o quanto ele tem que "girar" 
+        # para que o player estja em seu fov. Então se os ângulos resultam em 0°, o player está no fov do inimigo
+        delta_enemy -= 2 * math.pi
+
+    while delta_enemy < -math.pi:
+        delta_enemy += 2 * math.pi
+
+    return abs(delta_enemy) < math.radians(45)
 
 def move_enemy():
     # encontrar inimigo:
@@ -228,12 +254,10 @@ def move_enemy():
     dist = math.hypot(dy, dx)
     # calcula a distância real (acima)
     if dist > enemy.vel:
-        enemy.y += (dy - enemy.y) / dist * enemy.vel # e move o inimigo de acordo com a velocidade e dist
-        enemy.x += (dx - enemy.x) / dist * enemy.vel
+        enemy.y += dy / dist * enemy.vel # e move o inimigo de acordo com a velocidade e dist
+        enemy.x += dx / dist * enemy.vel
     else: # caso falte menos que a velocidade p/ chegar ao alvo
-        enemy.pos = (target_y, target_x) # evita teleportar o inimigo
-    
-    enemy.angle = math.atan2(dy, dx)
+        enemy.pos = (target_x, target_y) # evita teleportar o inimigo
 
 # Implementação DDA:
 
@@ -362,36 +386,42 @@ def draw():
         y = HEIGHT/2 - h/2
         rect_screen = Rect(x, y, column_width+2, h)
         screen.draw.filled_rect(rect_screen, (120,120,255))
-        
-    dx_enemy = enemy.x - player.x # encontrar o vetor entre inimigo e player
-    dy_enemy = enemy.y - player.y
-    en_angle = math.atan2(dy_enemy, dx_enemy) # direção do inimigo (onde ele "olha") -------------------
-    delta_enemy = en_angle - player.angle # variação do en_angle
-    
-    while delta_enemy > math.pi: # limitação dos ângulos
-         delta_enemy -= 2*math.pi
 
-    while delta_enemy < -math.pi: # limitação dos ângulos
-        delta_enemy += 2*math.pi
-    
-    en_depth = math.hypot(dy_enemy, dx_enemy) # distância entre ambos
-    en_dist = en_depth * math.cos(delta_enemy)
-    
-    if abs(delta_enemy) < FOV/2:
-        en_height = (TILE_SIZE * DIST_PLANO) / en_dist
-        en_width = en_height
-        screen_x = (delta_enemy / FOV + 0.5) * WIDTH
-        screen_y = HEIGHT/2 - en_height/2
-        
-        ray = int(screen_x / column_width)
+    dx = enemy.x - player.x
+    dy = enemy.y - player.y
 
-        if 0 <= ray < len(rays):
-            if en_dist < rays[ray]:
-                en_screen = pygame.transform.scale(enemy_img, (int(en_width), int(en_height)))
-                screen.surface.blit(en_screen, (screen_x - en_width/2, screen_y))
+    en_dist = math.hypot(dx, dy)
+    angle = math.atan2(dy, dx)
+    delta = angle - player.angle
 
-    # Implementar a lógica do inimigo parecida com o cast_ray das paredes,
-    # podendo mostrá-lo quando o FOV do player "enquadra" o inimigo.
+    while delta > math.pi:
+        delta -= 2*math.pi
+    while delta < -math.pi:
+        delta += 2*math.pi
+
+    if abs(delta) < FOV/2:
+        return
+    
+    en_dist *= math.cos(delta)
+    if en_dist <= 1:
+        en_dist = 1
+    en_h = TILE_SIZE * DIST_PLANO / en_dist
+    en_w = h
+    screen_x = WIDTH/2 + math.tan(delta) * DIST_PLANO
+    screen_y = HEIGHT/2 - en_h/2
+    left = int((screen_x - en_w/2) / column_width)
+    right = int((screen_x + en_w/2) / column_width)
+    
+    ray = int(screen_x / column_width)
+    sprite = pygame.transform.scale(enemy_img, (int(en_w), int(en_h)))
+    for ray in range(left, right + 1):
+            if 0 <= ray < NUM_RAYS:
+                if en_dist < rays[ray]:
+                    tex_x = int((ray-left) / (right-left+1) * sprite.get_width())
+                    column = sprite.subsurface((tex_x, 0, 1, sprite.get_height()))
+                    
+                    x = ray * column_width
+                    screen.surface.blit(column, (x, screen_y))
 
 def update():
     global enemy_timer
@@ -423,12 +453,11 @@ def update():
     enemy_timer += 1
 
     if enemy_timer >= 15:
-        move_enemy()
-        enemy_timer = 0
-    if enemy.colliderect(player):
-        quit()
-    if see_player():
-        move_enemy()
+        if get_enemy_fov(enemy, player):
+            if can_see_player(enemy, player):
+                move_enemy()
+
+    enemy_timer = 0
     
     # testa movimento em Y
     if not (has_wall(player.x-dx, player_posy-dy) or has_wall(player.x+dx, player_posy-dy) or

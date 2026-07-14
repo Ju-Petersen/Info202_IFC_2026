@@ -7,7 +7,7 @@ def retornar_pessoas():
 
     # conectar ao servidor MySQL com usuário e senha root
     conn = mysql.connector.connect(
-        host="10.10.34.239",
+        host="10.10.34.27",
         user="root",
         password="root"
     )

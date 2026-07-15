@@ -1,4 +1,6 @@
-# Comentar bfs!!!!!!!!!!!!!!!!!!!!!!
+from collections import deque# Comentar bfs!!!!!!!!!!!!!!!!!!!!!!
+from world import world_map
+
 def bfs(start, goal):
     queue = deque([start]) # posições futuras do inimigo
     visited = {start} # posições passadas

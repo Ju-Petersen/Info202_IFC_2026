@@ -1,4 +1,8 @@
 import random
+from pgzero.rect import Rect
+
+TILE_SIZE = 55
+TILE = Rect(0, 0, TILE_SIZE, TILE_SIZE) #definir o tamanho do tile (quadrado) para rendenização
 
 # no "for" abaixo, o "c" dá um loop pelas colunas, e "r" por cada linha
 world_map = [
@@ -17,6 +21,11 @@ world_map = [
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ]
+ROWS = 14
+COLS = 25
+
+WIDTH = len(world_map[0]) * TILE_SIZE
+HEIGHT = len(world_map) * TILE_SIZE
 
 def has_wall(x, y):
     col = int(x // TILE_SIZE)

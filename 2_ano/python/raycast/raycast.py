@@ -1,7 +1,11 @@
+import math
+from pgzero.rect import Rect
+from world import world_map, TILE_SIZE, COLS, ROWS, WIDTH, HEIGHT
+from settings import NUM_RAYS, FOV, DIST_PLAN
 # Implementação DDA:
 # cast_ray para inimigo também
 
-def cast_ray(angle):
+def cast_ray(angle, player):
     ray_y = math.sin(angle)
     ray_x = math.cos(angle)
     # a partir das coordenadas do raio, as coordenadas 
@@ -98,13 +102,13 @@ def cast_ray(angle):
         
     return depth, hit_x, hit_y, side
 
-def draw_walls():
+def draw_walls(player):
     # lançar os ângulos até que player.angle tenha FOV positivo:
     rays = []
     for ray in range(NUM_RAYS):
         angle = player.angle - FOV/2 + ray * (FOV / (NUM_RAYS-1)) # isolar NUM_RAYS - 1 !!
         # o ângulo do player quando aplicada a fórmula a partir do campo de visão (FOV) direciona para onde os vetores serão desenhados
-        depth, hit_x, hit_y, side = cast_ray(angle) # onde o vetor colide com a parede
+        depth, hit_x, hit_y, side = cast_ray(angle, player) # onde o vetor colide com a parede
         rays.append(depth)
         #screen.draw.line(player.pos, (hit_x, hit_y), (0, 255, 0)) # desta maneira os vetores representam a h da parede na projeção.
     
@@ -118,7 +122,7 @@ def draw_walls():
     screen.draw.filled_rect(Rect(0, HEIGHT//2, WIDTH, HEIGHT//2), (80,80,80))
     
     for alt, depth in enumerate(rays):
-        h = (TILE_SIZE * DIST_PLANO)/depth
+        h = (TILE_SIZE * DIST_PLAN)/depth
         h = min(HEIGHT, h)
         x = alt*column_width
         y = HEIGHT/2 - h/2

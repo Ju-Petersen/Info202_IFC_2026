@@ -1,8 +1,10 @@
-from world import random_pos
-from player import Player
-from collections import deque
-
-player = Player()
+import math
+import pygame
+from settings import FOV, NUM_RAYS, DIST_PLAN
+from world import world_map, random_pos, TILE_SIZE, ROWS, COLS, WIDTH, HEIGHT
+from pgzero.actor import Actor
+from pathfind import bfs
+from raycast import cast_ray
 
 class Enemy:
     def __init__(self):
@@ -10,7 +12,8 @@ class Enemy:
         self.speed = 5.0
         self.angle = 0
         self.timer = 0
-        self.actor.pos = random_pos()
+        self.image = pygame.image.load('2_ano/python/pyzero/images/fantasma.png').convert_alpha()
+        self.sprite.pos = random_pos()
 
     # Implementar FOV e raycast do inimigo (possibilita o inimigo "parar de ver" o player):
     def can_see_player(self, player):
@@ -97,7 +100,7 @@ class Enemy:
 
         return abs(delta_enemy) < math.radians(45)
 
-    def move_enemy():
+    def move_enemy(self, player):
         # encontrar inimigo:
         en_row = int(self.sprite.y // TILE_SIZE)
         en_col = int(self.sprite.x // TILE_SIZE)
@@ -129,80 +132,58 @@ class Enemy:
         else: # caso falte menos que a velocidade p/ chegar ao alvo
             self.sprite.pos = (target_x, target_y) # evita teleportar o inimigo
 
-    def draw_enemy():
-        screen.clear()
-        screen.fill('lightblue')
+    def draw(self, player):# lançar os ângulos até que player.angle tenha FOV positivo:
+        rays = []
+        for ray in range(NUM_RAYS):
+            angle = player.angle - FOV/2 + ray * (FOV / (NUM_RAYS-1)) # isolar NUM_RAYS - 1 !!
+            # o ângulo do player quando aplicada a fórmula a partir do campo de visão (FOV) direciona para onde os vetores serão desenhados
+            depth, hit_x, hit_y, side = cast_ray(angle, player) # onde o vetor colide com a parede
+            rays.append(depth)
+            #screen.draw.line(player.pos, (hit_x, hit_y), (0, 255, 0)) # desta maneira os vetores representam a h da parede na projeção.
         
-        dx = self.sprite.x - player.sprite.x
-        dy = self.sprite.y - player.sprite.y
-
-        en_dist = math.hypot(dx, dy)
-        angle = math.atan2(dy, dx)
-        delta = angle - player.angle
-
-        while delta > math.pi:
-            delta -= 2*math.pi
-        while delta < -math.pi:
-            delta += 2*math.pi
-
-        if abs(delta) < FOV/2:
-            return
+        column_width = WIDTH / NUM_RAYS # a largura da coluna (um vaetor/raio/linha) baseada em NUM_RAYS, ou seja 200 raios.
         
-        en_dist *= math.cos(delta)
-        if en_dist <= 1:
-            en_dist = 1
-        en_h = TILE_SIZE * DIST_PLANO / en_dist
-        en_w = h
-        screen_x = WIDTH/2 + math.tan(delta) * DIST_PLANO
-        screen_y = HEIGHT/2 - en_h/2
-        left = int((screen_x - en_w/2) / column_width)
-        right = int((screen_x + en_w/2) / column_width)
-        
-        ray = int(screen_x / column_width)
-        sprite = pygame.transform.scale(enemy_img, (int(en_w), int(en_h)))
-        for ray in range(left, right + 1):
-                if 0 <= ray < NUM_RAYS:
-                    if en_dist < rays[ray]:
-                        tex_x = int((ray-left) / (right-left+1) * sprite.get_width())
-                        column = sprite.subsurface((tex_x, 0, 1, sprite.get_height()))
-                        
-                        x = ray * column_width
-                        screen.surface.blit(column, (x, screen_y))
-                        screen.clear()
-        screen.fill('lightblue')
-        
-        dx = self.sprite.x - player.sprite.x
-        dy = self.sprite.y - player.sprite.y
+        for alt, depth in enumerate(rays):
+            h = (TILE_SIZE * DIST_PLAN)/depth
+            h = min(HEIGHT, h)
+            x = alt*column_width
+            y = HEIGHT/2 - h/2
 
-        en_dist = math.hypot(dx, dy)
-        angle = math.atan2(dy, dx)
-        delta = angle - player.angle
+            dx = self.sprite.x - player.x
+            dy = self.sprite.y - player.y
 
-        while delta > math.pi:
-            delta -= 2*math.pi
-        while delta < -math.pi:
-            delta += 2*math.pi
+            en_dist = math.hypot(dx, dy)
+            angle = math.atan2(dy, dx)
+            delta = angle - player.angle
 
-        if abs(delta) < FOV/2:
-            return
-        
-        en_dist *= math.cos(delta)
-        if en_dist <= 1:
-            en_dist = 1
-        en_h = TILE_SIZE * DIST_PLANO / en_dist
-        en_w = h
-        screen_x = WIDTH/2 + math.tan(delta) * DIST_PLANO
-        screen_y = HEIGHT/2 - en_h/2
-        left = int((screen_x - en_w/2) / column_width)
-        right = int((screen_x + en_w/2) / column_width)
-        
-        ray = int(screen_x / column_width)
-        sprite = pygame.transform.scale(enemy_img, (int(en_w), int(en_h)))
-        for ray in range(left, right + 1):
-                if 0 <= ray < NUM_RAYS:
-                    if en_dist < rays[ray]:
-                        tex_x = int((ray-left) / (right-left+1) * sprite.get_width())
-                        column = sprite.subsurface((tex_x, 0, 1, sprite.get_height()))
-                        
-                        x = ray * column_width
-                        screen.surface.blit(column, (x, screen_y))
+            while delta > math.pi:
+                delta -= 2*math.pi
+            while delta < -math.pi:
+                delta += 2*math.pi
+
+            if abs(delta) < FOV/2:
+                return
+            
+            en_dist *= math.cos(delta)
+            if en_dist <= 1:
+                en_dist = 1
+            en_h = TILE_SIZE * DIST_PLAN / en_dist
+            en_w = h
+            screen_x = WIDTH/2 + math.tan(delta) * DIST_PLAN
+            screen_y = HEIGHT/2 - en_h/2
+            left = int((screen_x - en_w/2) / column_width)
+            right = int((screen_x + en_w/2) / column_width)
+            
+            ray = int(screen_x / column_width)
+            self.image = pygame.transform.scale(self.image, (int(en_w), int(en_h)))
+            for ray in range(left, right + 1):
+                    if 0 <= ray < NUM_RAYS:
+                        if en_dist < rays[ray]:
+                            tex_x = int((ray-left) / (right-left+1) * self.image.get_width())
+                            column = self.image.subsurface((tex_x, 0, 1, self.image.get_height()))
+                            
+                            x = ray * column_width
+                            screen.surface.blit(column, (x, screen_y))
+
+    def update(self):
+        print("temporário")

@@ -1,4 +1,5 @@
 import random
+from settings import TILE, TILE_SIZE, ROWS, COLS
 
 # no "for" abaixo, o "c" dá um loop pelas colunas, e "r" por cada linha
 world_map = [

@@ -1,13 +1,15 @@
+import math
+from world import world_map, TILE, TILE_SIZE, ROWS, COLS
 # Implementação DDA:
 # cast_ray para inimigo também
 
-def cast_ray(angle):
+def cast_ray(player, world_map, angle):
     ray_y = math.sin(angle)
     ray_x = math.cos(angle)
     # a partir das coordenadas do raio, as coordenadas 
     # em pixel do player serão contadas a partir de TILE_SIZE
-    y = player.y / TILE_SIZE
-    x = player.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
+    y = player.sprite.y / TILE_SIZE
+    x = player.sprite.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
     '''
     A iteração da fução cast_ray antiga percorria cada pixel:
 
@@ -93,12 +95,12 @@ def cast_ray(angle):
     depth = wall_depth * TILE_SIZE
     depth *= math.cos(angle-player.angle)
     
-    hit_y = player.y + ray_y * depth
-    hit_x = player.x + ray_x * depth
+    hit_y = player.sprite.y + ray_y * depth
+    hit_x = player.sprite.x + ray_x * depth
         
     return depth, hit_x, hit_y, side
 
-def draw_walls():
+def draw_walls(screen, rays):
     # lançar os ângulos até que player.angle tenha FOV positivo:
     rays = []
     for ray in range(NUM_RAYS):

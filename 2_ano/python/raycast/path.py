@@ -1,3 +1,6 @@
+from collections import deque
+from world import world_map
+
 # Comentar bfs!!!!!!!!!!!!!!!!!!!!!!
 def bfs(start, goal):
     queue = deque([start]) # posições futuras do inimigo

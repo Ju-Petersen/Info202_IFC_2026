@@ -1,8 +1,8 @@
+import pgzero
+import pygame
+from settings import TILE, TILE_SIZE, ROWS, COLS, FOV, RES
 from world import random_pos
-from player import Player
-from collections import deque
-
-player = Player()
+from pgzero.actor import Actor
 
 class Enemy:
     def __init__(self):
@@ -10,7 +10,7 @@ class Enemy:
         self.speed = 5.0
         self.angle = 0
         self.timer = 0
-        self.actor.pos = random_pos()
+        self.sprite.pos = random_pos()
 
     # Implementar FOV e raycast do inimigo (possibilita o inimigo "parar de ver" o player):
     def can_see_player(self, player):
@@ -82,7 +82,7 @@ class Enemy:
 
         angle_to_player = math.atan2(dy_en, dx_en) # direção do inimigo (onde ele "olha") -------------------
 
-        delta_enemy = angle_to_player - self.sprite.angle 
+        delta_enemy = angle_to_player - self.angle 
         # calcular delta entre o ângulo do inimigo e seu ângulo em relação ao player, 
         # para mostrar quanto o vetor precisa
         # percorrer até chegar a próxima célula
@@ -97,7 +97,7 @@ class Enemy:
 
         return abs(delta_enemy) < math.radians(45)
 
-    def move_enemy():
+    def move_enemy(self, player):
         # encontrar inimigo:
         en_row = int(self.sprite.y // TILE_SIZE)
         en_col = int(self.sprite.x // TILE_SIZE)
@@ -123,16 +123,13 @@ class Enemy:
 
         dist = math.hypot(dy, dx)
         # calcula a distância real (acima)
-        if dist > self.sprite.speed:
-            self.sprite.y += dy / dist * self.sprite.speed # e move o inimigo de acordo com a velocidade e dist
-            self.sprite.x += dx / dist * self.sprite.speed
+        if dist > self.speed:
+            self.sprite.y += dy / dist * self.speed # e move o inimigo de acordo com a velocidade e dist
+            self.sprite.x += dx / dist * self.speed
         else: # caso falte menos que a velocidade p/ chegar ao alvo
-            self.sprite.pos = (target_x, target_y) # evita teleportar o inimigo
+            self.pos = (target_x, target_y) # evita teleportar o inimigo
 
-    def draw_enemy():
-        screen.clear()
-        screen.fill('lightblue')
-        
+    def draw():
         dx = self.sprite.x - player.sprite.x
         dy = self.sprite.y - player.sprite.y
 
@@ -168,11 +165,6 @@ class Enemy:
                         
                         x = ray * column_width
                         screen.surface.blit(column, (x, screen_y))
-                        screen.clear()
-        screen.fill('lightblue')
-        
-        dx = self.sprite.x - player.sprite.x
-        dy = self.sprite.y - player.sprite.y
 
         en_dist = math.hypot(dx, dy)
         angle = math.atan2(dy, dx)

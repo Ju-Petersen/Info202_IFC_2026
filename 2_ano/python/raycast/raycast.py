@@ -1,4 +1,5 @@
-from world import world_map, TILE, TILE_SIZE, ROWS, COLS
+from world import world_map
+from settings import  TILE, TILE_SIZE, ROWS, COLS, FOV, RES
 # Implementação DDA:
 # cast_ray para inimigo também
 
@@ -125,3 +126,43 @@ def draw_walls(screen, player):
         y = HEIGHT/2 - h/2
         rect_screen = Rect(x, y, column_width+2, h)
         screen.draw.filled_rect(rect_screen, (120,120,255))
+
+def draw_enemy(self, screen, player, rays, enemy_img):
+        screen.clear()
+        screen.fill('lightblue')
+        
+        dx = self.sprite.x - player.sprite.x
+        dy = self.sprite.y - player.sprite.y
+
+        en_dist = math.hypot(dx, dy)
+        angle = math.atan2(dy, dx)
+        delta = angle - player.angle
+
+        while delta > math.pi:
+            delta -= 2*math.pi
+        while delta < -math.pi:
+            delta += 2*math.pi
+
+        if abs(delta) > FOV/2:
+            return
+        
+        en_dist *= math.cos(delta)
+        if en_dist <= 1:
+            en_dist = 1
+        en_h = TILE_SIZE * DIST_PLANO / en_dist
+        en_w = en_h
+        screen_x = WIDTH/2 + math.tan(delta) * DIST_PLANO
+        screen_y = HEIGHT/2 - en_h/2
+        left = int((screen_x - en_w/2) / column_width)
+        right = int((screen_x + en_w/2) / column_width)
+        
+        ray = int(screen_x / column_width)
+        sprite = pygame.transform.scale(enemy_img, (int(en_w), int(en_h)))
+        for ray in range(left, right + 1):
+                if 0 <= ray < NUM_RAYS:
+                    if en_dist < rays[ray]:
+                        tex_x = int((ray-left) / (right-left+1) * sprite.get_width())
+                        column = sprite.subsurface((tex_x, 0, 1, sprite.get_height()))
+                        
+                        x = ray * column_width
+                        screen.surface.blit(column, (x, screen_y))

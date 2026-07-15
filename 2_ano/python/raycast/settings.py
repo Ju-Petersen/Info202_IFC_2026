@@ -1,11 +1,9 @@
 import math
 from pgzero.rect import Rect
 
-TILE_SIZE = 55
-TILE = Rect(0, 0, TILE_SIZE, TILE_SIZE) #definir o tamanho do tile (quadrado) para rendenização
-
-ROWS = 14
-COLS = 25
-
 FOV = math.radians(60) # campo de visão, 60°
 RES = 4 # resolução p/ rendenização
+WIDTH = len(world_map[0]) * TILE_SIZE
+HEIGHT = len(world_map) * TILE_SIZE
+NUM_RAYS = WIDTH // RES # raios (vetores) que serão 'desenhados' a partir do movimento do player#0 são espaçoes vazios e 1 são as
+DIST_PLANO = WIDTH / (2 * math.tan(FOV/2))

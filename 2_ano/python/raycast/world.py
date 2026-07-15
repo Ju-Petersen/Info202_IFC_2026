@@ -19,6 +19,12 @@ world_map = [
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ]
 
+TILE_SIZE = 55
+TILE = Rect(0, 0, TILE_SIZE, TILE_SIZE) #definir o tamanho do tile (quadrado) para rendenização
+
+ROWS = 14
+COLS = 25
+
 def has_wall(x, y):
     col = int(x // TILE_SIZE)
     row = int(y // TILE_SIZE)

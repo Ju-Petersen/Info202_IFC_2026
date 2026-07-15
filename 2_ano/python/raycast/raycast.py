@@ -1,17 +1,14 @@
-import math
-from pgzero.rect import Rect
-from world import world_map, TILE_SIZE, COLS, ROWS, WIDTH, HEIGHT
-from settings import NUM_RAYS, FOV, DIST_PLAN
+from world import world_map, TILE, TILE_SIZE, ROWS, COLS
 # Implementação DDA:
 # cast_ray para inimigo também
 
-def cast_ray(angle, player):
+def cast_ray(player, world_map, angle):
     ray_y = math.sin(angle)
     ray_x = math.cos(angle)
     # a partir das coordenadas do raio, as coordenadas 
     # em pixel do player serão contadas a partir de TILE_SIZE
-    y = player.y / TILE_SIZE
-    x = player.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
+    y = player.sprite.y / TILE_SIZE
+    x = player.sprite.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
     '''
     A iteração da fução cast_ray antiga percorria cada pixel:
 
@@ -97,18 +94,18 @@ def cast_ray(angle, player):
     depth = wall_depth * TILE_SIZE
     depth *= math.cos(angle-player.angle)
     
-    hit_y = player.y + ray_y * depth
-    hit_x = player.x + ray_x * depth
+    hit_y = player.sprite.y + ray_y * depth
+    hit_x = player.sprite.x + ray_x * depth
         
     return depth, hit_x, hit_y, side
 
-def draw_walls(player):
+def draw_walls(screen, player):
     # lançar os ângulos até que player.angle tenha FOV positivo:
     rays = []
     for ray in range(NUM_RAYS):
         angle = player.angle - FOV/2 + ray * (FOV / (NUM_RAYS-1)) # isolar NUM_RAYS - 1 !!
         # o ângulo do player quando aplicada a fórmula a partir do campo de visão (FOV) direciona para onde os vetores serão desenhados
-        depth, hit_x, hit_y, side = cast_ray(angle, player) # onde o vetor colide com a parede
+        depth, hit_x, hit_y, side = cast_ray(angle) # onde o vetor colide com a parede
         rays.append(depth)
         #screen.draw.line(player.pos, (hit_x, hit_y), (0, 255, 0)) # desta maneira os vetores representam a h da parede na projeção.
     
@@ -122,7 +119,7 @@ def draw_walls(player):
     screen.draw.filled_rect(Rect(0, HEIGHT//2, WIDTH, HEIGHT//2), (80,80,80))
     
     for alt, depth in enumerate(rays):
-        h = (TILE_SIZE * DIST_PLAN)/depth
+        h = (TILE_SIZE * DIST_PLANO)/depth
         h = min(HEIGHT, h)
         x = alt*column_width
         y = HEIGHT/2 - h/2

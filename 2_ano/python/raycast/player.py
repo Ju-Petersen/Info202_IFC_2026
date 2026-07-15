@@ -1,18 +1,27 @@
+import pygame
 import math
-import pgzero
 from pgzero.actor import Actor
-from world import TILE_SIZE, has_wall
+from world import has_wall
+from settings import TILE_SIZE
 
 class Player:
     def __init__(self):   
         self.sprite = Actor('circulo.png', anchor=('center', 'center'))
         self.angle = 0.0 #o centro de rotação é o ponto âncora e ângulo em rad
         self.speed = 1.5
-        self.pos = TILE_SIZE*2, TILE_SIZE*2
+        self.sprite.pos = TILE_SIZE*2, TILE_SIZE*2
+        if has_wall(self.sprite.x, self.sprite.y):
+            self.sprite.pos = (TILE_SIZE*2) - 2, (TILE_SIZE*2) - 2
+    
     def draw(self):
         self.sprite.draw()
-
-    def update(self):
+        
+    def update(self, keyboard):
+        if keyboard.lshift:
+            self.speed = 3
+        else:
+            self.speed = 1.5
+    
         cos_a = math.cos(self.angle)
         sin_a = math.sin(self.angle)
         dx = self.sprite.width / 2
@@ -20,11 +29,6 @@ class Player:
         
         player_posx = self.sprite.x # posição futura
         player_posy = self.sprite.y # posição futura
-
-        if keyboard.lshift:
-            self.speed = 3
-        else:
-            self.speed = 1.5
             
         if keyboard.w:
             player_posy += sin_a * self.speed #anda em x ou y de acordo com a direção que o player "olha"

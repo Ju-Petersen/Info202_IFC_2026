@@ -4,14 +4,10 @@ os.environ['SDL_VIDEO_WINDOW_POS'] = "center"
 
 import pygame
 import pgzrun
-import math
 
 from enemy import Enemy
 from player import Player
-from pathfind import bfs
-from settings import TILE, TILE_SIZE, ROWS, COLS, FOV, RES
-from raycast import cast_ray, draw_walls
-from world import world_map, has_wall, random_pos
+from raycast import draw_walls, draw_enemy
 
 pygame.mouse.set_visible(False)
 pygame.event.set_grab(True)
@@ -32,9 +28,9 @@ def draw():
     screen.clear()
     screen.fill('lightblue')
     
-    draw_walls(screen, player)
+    rays = draw_walls(screen, player)
+    draw_enemy(screen, player, enemy, enemy_img, rays)
     player.draw()
-    enemy.draw()
 
 def update():
     global enemy_timer

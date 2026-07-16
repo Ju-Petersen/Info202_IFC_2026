@@ -1,4 +1,3 @@
-import pygame
 import math
 from pgzero.actor import Actor
 from world import has_wall
@@ -17,11 +16,6 @@ class Player:
         self.sprite.draw()
         
     def update(self, keyboard):
-        if keyboard.lshift:
-            self.speed = 3
-        else:
-            self.speed = 1.5
-    
         cos_a = math.cos(self.angle)
         sin_a = math.sin(self.angle)
         dx = self.sprite.width / 2
@@ -29,7 +23,11 @@ class Player:
         
         player_posx = self.sprite.x # posição futura
         player_posy = self.sprite.y # posição futura
-            
+        
+        if keyboard.lshift:
+            self.speed = 3
+        else:
+            self.speed = 1.5
         if keyboard.w:
             player_posy += sin_a * self.speed #anda em x ou y de acordo com a direção que o player "olha"
             player_posx += cos_a * self.speed

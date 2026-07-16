@@ -1,24 +1,24 @@
-import pygame
 import math
-from pathfind import bfs
-from world import random_pos
-from settings import TILE_SIZE, TILE_SIZE, COLS, ROWS
-from pgzero.actor import Actor
+import pygame
 from collections import deque
+from world import random_pos, world_map, COLS, ROWS
+from settings import TILE_SIZE
 
 class Enemy:
     def __init__(self):
-        self.sprite = Actor('fantasma.png', anchor=('center', 'center'))
+        self.image = pygame.image.load("2_ano/python/pyzero/images/fantasma.png").convert_alpha()
+        
+        self.x, self.y = random_pos()
+
         self.speed = 5.0
         self.angle = 0
         self.timer = 0
-        self.sprite.pos = random_pos()
 
     # Implementar FOV e raycast do inimigo (possibilita o inimigo "parar de ver" o player):
     def can_see_player(self, player):
         #colocar o DDA
-        dx_enemy = player.sprite.x - self.sprite.x # encontrar o vetor entre inimigo e player
-        dy_enemy = player.sprite.y - self.sprite.y
+        dx_enemy = player.sprite.x - self.x # encontrar o vetor entre inimigo e player
+        dy_enemy = player.sprite.y - self.y
         dist_to_player = math.hypot(dy_enemy, dx_enemy) # direção do inimigo (onde ele "olha") -------------------
         en_angle = math.atan2(dy_enemy, dx_enemy)
         
@@ -26,8 +26,8 @@ class Enemy:
         ray_x = math.cos(en_angle)
         # a partir das coordenadas do raio, as coordenadas 
         # em pixel do player serão contadas a partir de TILE_SIZE
-        y = self.sprite.y / TILE_SIZE
-        x = self.sprite.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
+        y = self.y / TILE_SIZE
+        x = self.x / TILE_SIZE # dividir por TILE_SIZE mostra em qual coluna o player está
         # posição atual e futura:
         map_y = int(y)
         map_x = int(x)
@@ -79,8 +79,8 @@ class Enemy:
                 return True
 
     def get_enemy_fov(self, player): # ângulo do inimigo
-        dx_en = player.sprite.x - self.sprite.x
-        dy_en = player.sprite.y - self.sprite.y
+        dx_en = player.sprite.x - self.x
+        dy_en = player.sprite.y - self.y
 
         angle_to_player = math.atan2(dy_en, dx_en) # direção do inimigo (onde ele "olha") -------------------
 
@@ -98,17 +98,56 @@ class Enemy:
             delta_enemy += 2 * math.pi
 
         return abs(delta_enemy) < math.radians(45)
+    
+    def bfs(self, start, goal):
+        queue = deque([start]) # posições futuras do inimigo
+        visited = {start} # posições passadas
+        parent = {} # posições alcançadas
 
+        while queue: # enquanto as posições futuras ainda não foram alcançadas (ainda há locais p/ "andar")
+            current = queue.popleft() # retira a primeira posição da lista
+
+            if current == goal: 
+                # a posição a ser explorada é a mais antiga da lista, 
+                # por isso a remoção do primeiro item:
+                '''[(0, 0), (0,1), (1,0)]
+                    current = (0,0)
+                    nova lista:
+                    [(0,1), (1,0)]'''
+                path = []
+
+                while current != start:
+                    path.append(current)
+                    current = parent[current] # como o caminho "acaba" quando se verifica o dicionário armazena onde o inimigo já procurou
+
+                path.reverse() # o caminho fica de trás para frente, por isso o reverse
+                return path
+
+            row, col = current
+
+            for dr, dc in [(-1,0), (1,0), (0,-1), (0,1)]: # explora a possibilidade das posições vizinhas
+                nr = row + dr # e define as novas posições
+                nc = col + dc
+
+                if (0 <= nr < len(world_map) and 0 <= nc < len(world_map[0])
+                    and world_map[nr][nc] != 1 and (nr, nc) not in visited):
+                    # esse if verifica se aposição já foi passada e se é parede
+                    visited.add((nr, nc))
+                    parent[(nr, nc)] = current # chegou a posição (y, x) a partir da posição (y1, x1)
+                    queue.append((nr, nc)) # se as condições forem prenchidas as novas posições são definidas
+
+        return []
+    
     def move_enemy(self, player):
         # encontrar inimigo:
-        en_row = int(self.sprite.y // TILE_SIZE)
-        en_col = int(self.sprite.x // TILE_SIZE)
+        en_row = int(self.y // TILE_SIZE)
+        en_col = int(self.x // TILE_SIZE)
         # e encontrar player:
         player_row = int(player.sprite.y // TILE_SIZE)
         player_col = int(player.sprite.x // TILE_SIZE)
         
         # traça o caminho entre inimigo e player
-        path = bfs((en_row, en_col), (player_row, player_col)) # armazenar em lista para otimizar o cálculo do caminho
+        path = self.bfs((en_row, en_col), (player_row, player_col)) # armazenar em lista para otimizar o cálculo do caminho)
 
         if not path:
             return
@@ -120,14 +159,16 @@ class Enemy:
         target_x = next_col * TILE_SIZE + TILE_SIZE / 2 # e o "alvo" (player) nesse caminho futuro
         target_y = next_row * TILE_SIZE + TILE_SIZE / 2
         
-        dy = target_y - self.sprite.y # coordenadas em pixels
-        dx = target_x - self.sprite.x # e o quanto falta para chegar até o alvo
+        dy = target_y - self.y # coordenadas em pixels
+        dx = target_x - self.x # e o quanto falta para chegar até o alvo
         self.angle = math.atan2(dy, dx)
 
         dist = math.hypot(dy, dx)
         # calcula a distância real (acima)
-        if dist > self.sprite.speed:
-            self.sprite.y += dy / dist * self.sprite.speed # e move o inimigo de acordo com a velocidade e dist
-            self.sprite.x += dx / dist * self.sprite.speed
+        if dist > self.speed:
+            self.y += dy / dist * self.speed # e move o inimigo de acordo com a velocidade e dist
+            self.x += dx / dist * self.speed
         else: # caso falte menos que a velocidade p/ chegar ao alvo
-            self.sprite.pos = (target_x, target_y) # evita teleportar o inimigo
+            self.x = target_x # evita teleportar o inimigo
+            self.y = target_y # evita teleportar o inimigo
+

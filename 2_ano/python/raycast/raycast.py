@@ -1,5 +1,8 @@
-from world import world_map
-from settings import  TILE, TILE_SIZE, ROWS, COLS, FOV, RES
+import pygame
+import math
+from pgzero.rect import Rect
+from world import world_map, TILE_SIZE, COLS, ROWS
+from settings import FOV, NUM_RAYS, DIST_PLANO, WIDTH, HEIGHT
 # Implementação DDA:
 # cast_ray para inimigo também
 
@@ -91,6 +94,7 @@ def cast_ray(player, world_map, angle):
         # se lado = True e há uma parede ...
     else:
         wall_depth = (map_y - y + (1-step_y) / 2)/ray_y
+    
     # a profundidade é "desenhada", ou melhor, convertida em pixels
     depth = wall_depth * TILE_SIZE
     depth *= math.cos(angle-player.angle)
@@ -106,7 +110,7 @@ def draw_walls(screen, player):
     for ray in range(NUM_RAYS):
         angle = player.angle - FOV/2 + ray * (FOV / (NUM_RAYS-1)) # isolar NUM_RAYS - 1 !!
         # o ângulo do player quando aplicada a fórmula a partir do campo de visão (FOV) direciona para onde os vetores serão desenhados
-        depth, hit_x, hit_y, side = cast_ray(angle) # onde o vetor colide com a parede
+        depth, hit_x, hit_y, side = cast_ray(player, world_map, angle) # onde o vetor colide com a parede
         rays.append(depth)
         #screen.draw.line(player.pos, (hit_x, hit_y), (0, 255, 0)) # desta maneira os vetores representam a h da parede na projeção.
     
@@ -126,13 +130,12 @@ def draw_walls(screen, player):
         y = HEIGHT/2 - h/2
         rect_screen = Rect(x, y, column_width+2, h)
         screen.draw.filled_rect(rect_screen, (120,120,255))
+    
+    return rays
 
-def draw_enemy(self, screen, player, rays, enemy_img):
-        screen.clear()
-        screen.fill('lightblue')
-        
-        dx = self.sprite.x - player.sprite.x
-        dy = self.sprite.y - player.sprite.y
+def draw_enemy(screen, player, rays, enemy): # enemy como parâmetro para chamar a renderização de imagem, ao invés de usar o sprite como o Actor enemy
+        dx = enemy.x - player.sprite.x
+        dy = enemy.y - player.sprite.y
 
         en_dist = math.hypot(dx, dy)
         angle = math.atan2(dy, dx)
@@ -153,16 +156,17 @@ def draw_enemy(self, screen, player, rays, enemy_img):
         en_w = en_h
         screen_x = WIDTH/2 + math.tan(delta) * DIST_PLANO
         screen_y = HEIGHT/2 - en_h/2
+        column_width = WIDTH / NUM_RAYS # a largura da coluna (um vaetor/raio/linha) baseada em NUM_RAYS, ou seja 200 raios.
         left = int((screen_x - en_w/2) / column_width)
         right = int((screen_x + en_w/2) / column_width)
         
         ray = int(screen_x / column_width)
-        sprite = pygame.transform.scale(enemy_img, (int(en_w), int(en_h)))
+        image = pygame.transform.scale(enemy.image, (int(en_w), int(en_h)))
         for ray in range(left, right + 1):
                 if 0 <= ray < NUM_RAYS:
                     if en_dist < rays[ray]:
-                        tex_x = int((ray-left) / (right-left+1) * sprite.get_width())
-                        column = sprite.subsurface((tex_x, 0, 1, sprite.get_height()))
+                        tex_x = int((ray-left) / (right-left+1) * image.get_width())
+                        column = image.subsurface((tex_x, 0, 1, image.get_height()))
                         
                         x = ray * column_width
                         screen.surface.blit(column, (x, screen_y))

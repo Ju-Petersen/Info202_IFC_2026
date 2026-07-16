@@ -1,5 +1,5 @@
 import math
-from pgzero.rect import Rect
+from world import world_map, TILE_SIZE
 
 FOV = math.radians(60) # campo de visão, 60°
 RES = 4 # resolução p/ rendenização

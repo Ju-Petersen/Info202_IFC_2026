@@ -29,23 +29,23 @@ def draw():
     screen.fill('lightblue')
     
     rays = draw_walls(screen, player)
-    draw_enemy(screen, player, enemy, enemy_img, rays)
-    player.draw()
+    draw_enemy(screen, player, enemy, rays)
+    # player.draw()
 
 def update():
-    global enemy_timer
     player.update(keyboard)
     
     mouse_dx, mouse_dy = pygame.mouse.get_rel()
     player.angle += mouse_dx * 0.002
     
-    # enemy_timer += 1
-
-    # if enemy_timer >= 15:
-    #     if get_enemy_fov(enemy, player):
-    #         if can_see_player(enemy, player):
-    #             move_enemy()
-
-    # enemy_timer = 0
+    enemy.timer += 1
+    if enemy.timer >= 15:
+        if enemy.get_enemy_fov(player):
+            enemy.can_see_player(player)
+        
+    enemy.move_enemy(player)
+    
+    if enemy.collision_with_player(player):
+        quit()
 
 pgzrun.go()

@@ -133,7 +133,7 @@ def draw_walls(screen, player):
     
     return rays
 
-def draw_enemy(screen, player, rays, enemy): # enemy como parâmetro para chamar a renderização de imagem, ao invés de usar o sprite como o Actor enemy
+def draw_enemy(screen, player, enemy, rays): # enemy como parâmetro para chamar a renderização de imagem, ao invés de usar o sprite como o Actor enemy
         dx = enemy.x - player.sprite.x
         dy = enemy.y - player.sprite.y
 
@@ -165,7 +165,8 @@ def draw_enemy(screen, player, rays, enemy): # enemy como parâmetro para chamar
         for ray in range(left, right + 1):
                 if 0 <= ray < NUM_RAYS:
                     if en_dist < rays[ray]:
-                        tex_x = int((ray-left) / (right-left+1) * image.get_width())
+                        width = max(1, right - left + 1)
+                        tex_x = int((ray-left) / width * image.get_width())
                         column = image.subsurface((tex_x, 0, 1, image.get_height()))
                         
                         x = ray * column_width

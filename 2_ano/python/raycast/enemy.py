@@ -9,8 +9,7 @@ class Enemy:
         self.image = pygame.image.load("2_ano/python/pyzero/images/fantasma.png").convert_alpha()
         
         self.x, self.y = random_pos()
-
-        self.speed = 5.0
+        self.speed = 1.0
         self.angle = 0
         self.timer = 0
 
@@ -171,4 +170,14 @@ class Enemy:
         else: # caso falte menos que a velocidade p/ chegar ao alvo
             self.x = target_x # evita teleportar o inimigo
             self.y = target_y # evita teleportar o inimigo
+    
+    def collision_with_player(self, player):
+        dx = self.x - player.sprite.x
+        dy = self.y - player.sprite.y
 
+        dist = math.hypot(dx, dy)
+        
+        en_radius = 10
+        pl_radius = 10
+        
+        return dist < en_radius + pl_radius

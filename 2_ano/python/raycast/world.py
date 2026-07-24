@@ -44,7 +44,7 @@ def random_pos():
     for row in range(len(world_map)):
         for col in range(len(world_map[row])): # verifica se a linha tem um tile 0:
             if world_map[row][col] == 0: # 0 são os espaços livres (que não tem parede)
-                free_space.append((col, row))
+                free_space.append((row, col))
     
     if not free_space:
         return None

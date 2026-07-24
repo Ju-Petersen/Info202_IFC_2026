@@ -9,7 +9,7 @@ class Enemy:
         self.image = pygame.image.load("2_ano/python/pyzero/images/fantasma.png").convert_alpha()
         
         self.x, self.y = random_pos()
-        self.speed = 1.0
+        self.speed = 0.75
         self.angle = 0
         self.timer = 0
 

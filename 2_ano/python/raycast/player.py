@@ -13,9 +13,6 @@ class Player:
         
         if has_wall(self.sprite.x, self.sprite.y):
             self.sprite.pos = (TILE_SIZE*2) - 2, (TILE_SIZE*2) - 2
-    
-    def draw(self):
-        self.sprite.draw()
         
     def update(self, keyboard):
         cos_a = math.cos(self.angle)

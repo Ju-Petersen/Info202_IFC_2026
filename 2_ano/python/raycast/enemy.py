@@ -178,6 +178,6 @@ class Enemy:
         dist = math.hypot(dx, dy)
         
         en_radius = 10
-        pl_radius = 10
+        pl_radius = 15
         
         return dist < en_radius + pl_radius

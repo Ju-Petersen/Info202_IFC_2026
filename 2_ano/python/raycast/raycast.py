@@ -169,5 +169,5 @@ def draw_enemy(screen, player, enemy, rays): # enemy como parâmetro para chamar
                         tex_x = int((ray-left) / width * image.get_width())
                         column = image.subsurface((tex_x, 0, 4, image.get_height()))
                         
-                        x = ray * column_width
+                        x = ray * column_width 
                         screen.surface.blit(column, (x, screen_y))

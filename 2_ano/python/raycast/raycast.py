@@ -167,7 +167,7 @@ def draw_enemy(screen, player, enemy, rays): # enemy como parâmetro para chamar
                     if en_dist < rays[ray]:
                         width = max(1, right - left + 1)
                         tex_x = int((ray-left) / width * image.get_width())
-                        column = image.subsurface((tex_x, 0, 1, image.get_height()))
+                        column = image.subsurface((tex_x, 0, 4, image.get_height()))
                         
                         x = ray * column_width
                         screen.surface.blit(column, (x, screen_y))

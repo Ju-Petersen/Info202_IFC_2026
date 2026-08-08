@@ -172,12 +172,12 @@ class Enemy:
             self.y = target_y # evita teleportar o inimigo
     
     def collision_with_player(self, player):
+        en_radius = 5
+        pl_radius = 5
+        
         dx = self.x - player.sprite.x
         dy = self.y - player.sprite.y
 
         dist = math.hypot(dx, dy)
         
-        en_radius = 10
-        pl_radius = 10
-        
-        return dist < en_radius + pl_radius
+        return dist <= en_radius + pl_radius

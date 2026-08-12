@@ -4,10 +4,12 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [
-    { name = "Ju-Petersen", email = "juliapetersenavi@gmail.com" }
+    { name = "Felipe5804", email = "felipebucci2208@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "mysql-connector-python>=26.7.0",
+]
 
 [project.scripts]
 avaliacao-2tri = "avaliacao_2tri:main"

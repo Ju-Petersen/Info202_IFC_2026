@@ -106,36 +106,35 @@ for p in pessoas_em_objetos:
 
 print("Programa finalizado com sucesso")
 
-''' Roteiro (use o PowerShell)
+# Roteiro (use o PowerShell)
 
-a) verifique se o "uv" está instalado, digite: uv
+# a) verifique se o "uv" está instalado, digite: uv
 
-Se não estiver:
-a1) Execute:
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-a2) Feche o terminal e abra outro
-a3) Teste a execução, digitando: uv
+# Se não estiver:
+# a1) Execute:
+# powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+# a2) Feche o terminal e abra outro
+# a3) Teste a execução, digitando: uv
 
-b) crie um projeto do "uv": uv init meuprojeto
+# b) crie um projeto do "uv": uv init meuprojeto
 
-c) entre na pasta: cd meuprojeto
+# c) entre na pasta: cd meuprojeto
 
-d) adicione a biblioteca do mysql: uv add mysql-connector-python
+# d) adicione a biblioteca do mysql: uv add mysql-connector-python
 
-e) baixe a biblioteca: uv sync
+# e) baixe a biblioteca: uv sync
 
-f) configure as variáveis de ambiente:
+# f) configure as variáveis de ambiente:
 
-$env:DATABASE_HOST="aaaaaaa"
-$env:DATABASE_USER="bbbbbb"
-$env:DATABASE_PASSWORD="ccccccc"
-$env:DATABASE_PORT="ddddddd"
+# $env:DATABASE_HOST="aaaaaaa"
+# $env:DATABASE_USER="bbbbbb"
+# $env:DATABASE_PASSWORD="ccccccc"
+# $env:DATABASE_PORT="ddddddd"
 
-Visualize e confira se as variáveis foram criadas:
-echo $env:DATABASE_HOST
-echo $env:DATABASE_USER
-echo $env:DATABASE_PASSWORD
-echo $env:DATABASE_PORT
+# Visualize e confira se as variáveis foram criadas:
+# echo $env:DATABASE_HOST
+# echo $env:DATABASE_USER
+# echo $env:DATABASE_PASSWORD
+# echo $env:DATABASE_PORT
 
-g) execute o programa: uv run principal.py
-'''
+# g) execute o programa: uv run principal.py

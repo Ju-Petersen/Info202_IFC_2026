@@ -3,23 +3,15 @@ revision = 3
 requires-python = ">=3.12"
 
 [[package]]
-name = "exercicios-uv"
+name = "01-basico"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
-    { name = "mysql-connector" },
-    { name = "pony" },
-    { name = "pymysql" },
     { name = "sqlalchemy" },
 ]
 
 [package.metadata]
-requires-dist = [
-    { name = "mysql-connector", specifier = ">=2.2.9" },
-    { name = "pony", specifier = ">=0.7.20" },
-    { name = "pymysql", specifier = ">=1.2.0" },
-    { name = "sqlalchemy", specifier = ">=2.0.52" },
-]
+requires-dist = [{ name = "sqlalchemy", specifier = ">=2.0.52" }]
 
 [[package]]
 name = "greenlet"
@@ -74,30 +66,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/78/76/26a3782a051677668af9d92beaa47cd87ba9dd5072f762961144a03dd4c6/greenlet-3.5.5-cp315-cp315t-musllinux_1_2_x86_64.whl", hash = "sha256:19e4e026fe20691f333b8eb1a3bc9625eceba8c3f9d62ec5a6f8581afbc6b5a5", size = 1700925, upload-time = "2026-08-10T13:40:37.656Z" },
     { url = "https://files.pythonhosted.org/packages/28/d9/fe7baf4190c2ae71f267efb9de21b3172bb35bc0ed1ef53dd6027d658e33/greenlet-3.5.5-cp315-cp315t-win_amd64.whl", hash = "sha256:712aee154f648bde84634654bb38bb78c69ac640c37a45c9effed800735049d8", size = 331829, upload-time = "2026-08-10T13:26:48.851Z" },
     { url = "https://files.pythonhosted.org/packages/df/af/419a4e383bd600858a9b67e9b280a60fdc383ee3f2fe5b6c0c1ef04e74d1/greenlet-3.5.5-cp315-cp315t-win_arm64.whl", hash = "sha256:7f049911ee81a16a03c33d5450d8d5867d27f596ca5fb201b86f4524e874468b", size = 315093, upload-time = "2026-08-10T13:29:34.949Z" },
-]
-
-[[package]]
-name = "mysql-connector"
-version = "2.2.9"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/28/04/e40098f3730e75bbe36a338926f566ea803550a34fb50535499f4fc4787a/mysql-connector-2.2.9.tar.gz", hash = "sha256:1733e6ce52a049243de3264f1fbc22a852cb35458c4ad739ba88189285efdf32", size = 11852649, upload-time = "2019-04-01T14:40:08.091Z" }
-
-[[package]]
-name = "pony"
-version = "0.7.20"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/8b/0e/c76b175a7422816520552e2afc69303a171f434dc494354376d9d24ad2d5/pony-0.7.20.tar.gz", hash = "sha256:27a48dffd1d1005956ffa96873fb2de5eada639ca266c43db480cadabc860ccd", size = 278804, upload-time = "2026-08-09T12:42:20.233Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/b6/81/edd1014ef987dae03a30ccde3d30e317130d19dfe5317650a35cfba0151f/pony-0.7.20-py3-none-any.whl", hash = "sha256:88eb65c940c6efebdc56d2181dc4e5c89650f993f0b27037bbfb3e07b60696ba", size = 319899, upload-time = "2026-08-09T12:42:18.761Z" },
-]
-
-[[package]]
-name = "pymysql"
-version = "1.2.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c9/bc/1c6a92f385940f727daeecf3bacaf186e03875dff57197801046c583bcf0/pymysql-1.2.0.tar.gz", hash = "sha256:6c7b17ca686988104d7426c27895b455cdeea3e9d3ceb1270f0c3704fead8c33", size = 49021, upload-time = "2026-05-19T08:26:22.302Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/c4/bd/2534e130295c8cfd4f0a2e31623baab7502278f1e97bcfe61db75656a77f/pymysql-1.2.0-py3-none-any.whl", hash = "sha256:62169ce6d5510f08e140c5e7990ee884a9764024e4a9a27b2cc11f1099322ae0", size = 45716, upload-time = "2026-05-19T08:26:20.974Z" },
 ]
 
 [[package]]

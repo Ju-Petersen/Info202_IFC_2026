@@ -52,3 +52,5 @@ with Session(engine) as session:
     session.commit()
 
     print("Tabela criada (se não havia) e pessoa inserida no banco de dados")
+
+#Comentario teste p/atualizacao GitLab

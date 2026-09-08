@@ -75,5 +75,4 @@ with Session(engine) as session:
     | execute o código e verifique no banco de dados se os registros foram inseridos corretamente - FEITO
 - Modifique o programa para, em vez de acessar o SQLite, acessar o MySql. - FEITO
 - Use o programa da aula anterior como referência, para acessar o MySql. - FEITO
-- Levante uma instância de MySql no seu computador (use o XAMPP) - FEITO
-'''
+- Levante uma instância de MySql no seu computador (use o XAMPP) - FEITO'''

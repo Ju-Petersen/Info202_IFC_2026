@@ -27,7 +27,7 @@ class Celular(Base):
     operadora: Mapped[str] = mapped_column(String)
 
     # chave estrangeira :-)
-    pessoa_id: Mapped[int] = mapped_column(ForeignKey("PESSOA_TABLE_JULIA.id"))
+    pessoa_id: Mapped[int] = mapped_column(ForeignKey(Pessoa.id))
     # atributo para acesso ao objeto inteiro :-)
     pessoa: Mapped["Pessoa"] = relationship(back_populates="celulares")
 

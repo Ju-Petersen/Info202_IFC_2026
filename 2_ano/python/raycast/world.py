@@ -18,6 +18,7 @@ world_map = [
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ]
+# Armazenar world_map (listas) em uma database para que a variável world_map acesse-a e outras funcionalidades acessem apenas world_map
 
 TILE_SIZE = 55
 TILE = Rect(0, 0, TILE_SIZE, TILE_SIZE) #definir o tamanho do tile (quadrado) para rendenização

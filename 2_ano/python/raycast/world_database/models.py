@@ -42,7 +42,7 @@ class MapTiles(Base):
     
 '''De acordo com as tabelas inseridas, a database manipula algo como:
 world_map = [
- 1 2 3               ...                       col14 --> tile_type = 1 (parede)
+ 1 2 3               ...                        col14 --> tile_type = 1 (parede)
 [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], row 1 --> tile_type = 1 (parede)
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
 [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],

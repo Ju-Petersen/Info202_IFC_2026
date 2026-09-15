@@ -9,7 +9,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column # classes e ou
 class Base(DeclarativeBase):
     pass
 
-class WorldMaps(Base):
+class WorldMaps(Base): # classe para definir como os mapas são (a lista "world_map" no arquivo "world")
     __tablename__ = "world_maps"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -19,13 +19,7 @@ class WorldMaps(Base):
 
 class MapTiles(Base):
     __tablename__ = "map_tiles"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    row: Mapped[int] = mapped_column(Integer)
-    col: Mapped[int] = mapped_column(Integer)
-    tile_type: Mapped[int] = mapped_column(Integer)
-    # tile_type pode ser usado para defrinir se é parede (1) ou esoaço vazio (0) 
-    # e futuramente algum outro tipo de parede/porta/armadilha p/ o mapa
-
     # Foregin Key:
     world_map_id: Mapped[int] = mapped_column(ForeignKey(WorldMaps.id))
+    # tile_type pode ser usado para defrinir se é parede (1) ou esoaço vazio (0) 
+    # e futuramente algum outro tipo de parede/porta/armadilha p/ o mapa

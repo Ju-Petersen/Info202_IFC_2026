@@ -14,7 +14,7 @@ class Receita(Base):
     modo_preparo: Mapped[str] = mapped_column(String(500))
     ingredientes: Mapped[list] = mapped_column(String(500))
 
-engine = create_engine("mysql+pymysql://root:root@localhost:3306/receitas_db_julia")
+engine = create_engine("mysql+pymysql://root:root@localhost:3306/receitas_db_julia") # comentar com o professor pois a criação com mysql+pymysql está causando erro desconhecido!!!
 
 Base.metadata.create_all(engine)
 
@@ -36,4 +36,5 @@ with Session(engine) as session:
     session.add(r1)
     session.commit() # atualizar as adições
 
-    print("Banco de dados criado (se não existia), tabela criada (se não havia) e dados inseridos no banco")
+    print("A tabela foi criada (se não existia) e os dados da receita foram inseridos.")
+    print(f"A receita chamada {r1.nome} foi salva sob o número {r1.id}.")

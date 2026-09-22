@@ -36,7 +36,7 @@ class MapTiles(Base):
     map: Mapped["WorldMaps"] = relationship(back_populates="tiles")
     
     #Chave primária composta!!!!
-    __table_args__ = (PrimaryKeyConstraint("world_map_id", "row", "col"),)
+    __table_args__ = (PrimaryKeyConstraint("world_map_id", "row", "col"))
     # os tiles são identificados pelo id do mapa + row + col, como se fossem coordenadas
     # assim, evita situações em que dois id's diferentes apontem para o mesmo tile
     

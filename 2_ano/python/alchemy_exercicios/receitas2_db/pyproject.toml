@@ -1,0 +1,21 @@
+[project]
+name = "receitas2-db"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Ju-Petersen", email = "juliapetersenavi@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "mysql>=0.0.3",
+    "pymysql>=1.2.3",
+    "sqlalchemy>=2.0.54",
+]
+
+[project.scripts]
+receitas2-db = "receitas2_db:main"
+
+[build-system]
+requires = ["uv_build>=0.12.5,<0.13.0"]
+build-backend = "uv_build"

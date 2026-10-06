@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, String, Integer, ForeignKey
+from sqlalchemy import create_engine, String, Integer, Boolean, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session, relationship
 from typing import List, Optional
 
@@ -11,6 +11,7 @@ class Apartamento(Base): # v
     id: Mapped[int] = mapped_column(primary_key=True)
     nro_apartamento: Mapped[int] = mapped_column(Integer)
     andar: Mapped[int] = mapped_column(Integer)
+
     moradores: Mapped[List["Morador"]] = relationship(back_populates="apartamento")
 
 class Morador(Base):
@@ -19,7 +20,17 @@ class Morador(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     id_apartamento: Mapped[int] = mapped_column(ForeignKey("tbl_apartamento"), primary_key=True)
     nome: Mapped[str] = mapped_column(String(100))
-    telefone: Mapped[str] = mapped_column(String(13))
+    caracteristicas: Mapped[str] = mapped_column(String(500))
+    honestidade: Mapped[str] = mapped_column(Boolean, default=True)
+
+    sosias: Mapped[List["Sosia"]] = relationship(back_populates="morador")
+
+class Sosia(Base):
+    __tablename__ = "tbl_sosia"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    id_morador: Mapped[int] = mapped_column(ForeignKey("tbl_morador"), primary_key=True)
+    caracteristicas: Mapped[str] = mapped_column(String(500))
 
 '''
 Escolha 2 classes relacionadas de forma 1 para N e implemente-as usando o SQLAlchemy

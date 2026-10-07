@@ -1,0 +1,70 @@
+# Byte-compiled / otimizados (Arquivos gerados pelo Python em execução)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribuição e Empacotamento
+bin/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Ambientes Virtuais (Venv)
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Variáveis de ambiente e segredos (NUNCA envie senhas ou chaves de API)
+.env
+.env.*
+.secrets
+
+# Logs de erros e do sistema
+Aptfile
+pip-log.txt
+pip-delete-this-directory.txt
+*.log
+
+# Testes, Cobertura (Pytest, Coverage)
+htmlcov/
+.toast/
+.htmlcov/
+.export/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.modstmt.jo
+.hypothesis/
+.pytest_cache/
+.ruff_cache/
+
+# Configurações de IDEs (Opcional, mas recomendado para o time)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

@@ -33,13 +33,11 @@ class Ingrediente(Base):
 
     # chave estrangeira
     insumo_id: Mapped[int] = mapped_column(
-        ForeignKey("tabela_insumos.id"), 
-        primary_key=True)
+        ForeignKey("tabela_insumos.id"), primary_key=True)
 
     # chave estrangeira
     receita_id: Mapped[int] = mapped_column(
-        ForeignKey("tabela_receitas.id"), 
-        primary_key=True)
+        ForeignKey("tabela_receitas.id"), primary_key=True)
 
     # atributos de acesso ao objeto
     # (acima só temos o "id", nesses atributos 

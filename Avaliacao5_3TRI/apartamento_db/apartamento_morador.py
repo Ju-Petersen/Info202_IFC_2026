@@ -24,10 +24,31 @@ class Morador(Base):
     honestidade: Mapped[str] = mapped_column(Boolean, default=True)
         
     apartamento: Mapped[List["Apartamento"]] = relationship(back_populates="moradores")
-    
+
+class Sosia(Base):
+    __tablename__ = "tbl_sosia"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    id_morador: Mapped[int] = mapped_column(ForeignKey("tbl_morador.id"))
+    caracteristicas: Mapped[str] = mapped_column(String(500))
+
+# ler o arquivo .env
+load_dotenv()
+
+# buscando as variáveis de ambiente
+MYSQL_USER = os.getenv("MYSQL_USER")
+MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
+MYSQL_HOST = os.getenv("MYSQL_HOST")
+MYSQL_PORT = os.getenv("MYSQL_PORT")
+MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
+
+
+engine = create_engine("mysql+pymysql://root@localhost:3306/apartamentos_db")
 engine = create_engine("sqlite:///apartamentos_db")
 
-Base.metadata.create_all(engine) # Solicitar a criação das tabelas (classes) informadas acima
+Base.metadata.create_all(engine)
+
+with Session(engine) as session:
 
 with Session(engine) as session: # Iniciar sessão
     # Os objetos criados contém as informacoes que 
@@ -35,6 +56,7 @@ with Session(engine) as session: # Iniciar sessão
     # (classes) criadas para a database:
     ap1 = Apartamento(nro_apartamento=101, andar=1)
     m1 = Morador(nome="A", caracteristicas="Alto, moreno, nariz fino, ...", honestidade=True)
+    s1 = Sosia(id_morador=1, caracteristicas="lorem ipsum not some somebullcrap")
 
     session.add(ap1) # Adicionar o objeto criado
     session.add(m1)

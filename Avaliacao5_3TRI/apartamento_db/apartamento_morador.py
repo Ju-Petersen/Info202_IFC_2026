@@ -1,8 +1,9 @@
-from sqlalchemy import create_engine, String, Integer, Boolean, ForeignKey
+from sqlalchemy import create_engine, String, Integer, Boolean, ForeignKey, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session, relationship
 from typing import List, Optional
-import os
 from dotenv import load_dotenv
+import os
+import random
 
 class Base(DeclarativeBase):
     pass
@@ -32,29 +33,56 @@ class Sosia(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     id_morador: Mapped[int] = mapped_column(ForeignKey("tbl_morador.id"))
+    nome: Mapped[str] = mapped_column(String(100))
     caracteristicas: Mapped[str] = mapped_column(String(500))
 
-def listar_moradores(): # listar
-    m1 = Morador(id_apartamento=1, nome="Pedro",caracteristicas="Alto", honestidade=True)
-    m2 = Morador(id_apartamento=1, nome="Felipe",caracteristicas="Baixo", honestidade=True)
-    m3 = Morador(id_apartamento=1, nome="Ana",caracteristicas="Loura", honestidade=True)
-    m4 = Morador(id_apartamento=1, nome="Adenosvaldo",caracteristicas="Velho", honestidade=True)
-    m5 = Morador(id_apartamento=1, nome="Arthur",caracteristicas="Aura+Ego", honestidade=True)
-    m6 = Morador(id_apartamento=1, nome="Igor",caracteristicas="AAAAAAAAAA", honestidade=True)
-    # ???
+def mostrar_individuo(session):
+    # consultar a tabela de moradores e sosias:
+    id_moradores = session.execute(select(Morador.id)).all() # -->executar<-- um select nos ids, e "recolhe-los"
+    id_sosias = session.execute(select(Sosia.id)).all()
+    
+    tipo = random.choice(["morador", "sosia"])
+    
+    if tipo == "morador":
+        # selecionar um morador aleatório entre todos os moradores da tabela (com o id aleatorio *selecionado*):
+        id_morador = random.choice(id_moradores)
+        morador = session.get(Morador, id_morador)
+        apt = session.get(Apartamento, morador.id_apartamento)
+        # listar o(s) objeto(s) presente(s) na tabela:
+        print(f'''
+            nome: {morador.nome}
+            apartamento: {apt.nro_apartamento}
+            andar: {apt.andar}
+            caracteristicas: {morador.caracteristicas}''')
+    elif tipo == "sosia":
+        # selecionar uma sosia aleatória entre todas as sosias da tabela (com o id aleatorio *selecionado*):
+        id_sosia = random.choice(id_sosias)
+        sosia = session.get(Sosia, id_sosia)
+        mor_sosia = session.get(Morador, sosia.id_morador)
+        apt_sosia = session.get(Apartamento, mor_sosia.id_apartamento)
+        # listar o(s) objeto(s) presente(s) na tabela:
+        print(f'''
+            nome: {sosia.nome}
+            apartamento: {apt_sosia.nro_apartamento}
+            andar: {apt_sosia.andar}
+            caracteristicas: {sosia.caracteristicas}''')
+    
+# iniciar sessão sql (parâmetro session):
+def listar_informacoes(session):
+     print("temporario")
 
 def denunciar_sosia(): # excluir
-    # ao selecionar essa opção o usuario remove a sosia
-    print("temporario")
+     # ao selecionar essa opção o usuario remove a sosia
+     print("temporario")
 
 def aceitar_morador(): # inserir
-    print("temporario")
+     print("temporario")
 
-def selecionar_db():
-    print("temporario")
+# def selecionar_db():
+#     print("temporario")
 
 # ler o arquivo .env
-load_dotenv()
+# load_dotenv()
 
 # buscando as variáveis de ambiente
 # MYSQL_USER = os.getenv("MYSQL_USER")
@@ -64,27 +92,43 @@ load_dotenv()
 # MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
 
 # engine = create_engine("mysql+pymysql://root@localhost:3306/apartamentos_db")
-engine = create_engine("sqlite:///apartamentos_db")
 
+def main(session):
+    while True:
+        print('''
+            +---------------+
+            | 1 - Iniciar   |
+            | 2 - Encerrar  |
+            +---------------+''')
+        
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            mostrar_individuo(session)
+
+        # elif opcao == "2":
+        #     aceitar_morador(session)
+
+        # elif opcao == "3":
+        #     denunciar_sosia(session)
+
+        elif opcao == "2":
+            print("Encerrando o programa...")
+            break
+
+        else:
+            print("Opção inválida. Tente novamente.")
+        # mostrar o morador/sosia (funcao listar, mostra apernas um morador):
+        # listar suas caracteristicas:
+        # decidir se vai remover ou nao:
+            # se vai remover (funcao excluir), exclui senão adiciona (funcao adicionar):
+
+engine = create_engine("sqlite:///apartamentos_db")
 Base.metadata.create_all(engine)
 
-with Session(engine) as session:
-
-    ap1 = Apartamento(nro_apartamento=101, andar=1)
-    m1 = Morador(id_apartamento=1, nome="Pedro",caracteristicas="lorem ipsum somebullcrap", honestidade=True)
-    s1 = Sosia(id_morador=1, caracteristicas="lorem ipsum not some somebullcrap")
-
-    session.add(ap1)
-    session.add(m1)
-    session.add(s1)
-    session.commit()
-
-def main():
-    # mostrar o morador/sosia (funcao listar, mostra apernas um morador):
-    # listar suas caracteristicas:
-    # decidir se vai remover ou nao:
-        # se vai remover (funcao excluir), exclui senão adiciona (funcao adicionar):
-    print("temporario")
+if __name__ == "__main__":
+    with Session(engine) as session:
+        main(session)
 
 '''
 Escolha 2 classes relacionadas de forma 1 para N e implemente-as usando o SQLAlchemy - FEITO

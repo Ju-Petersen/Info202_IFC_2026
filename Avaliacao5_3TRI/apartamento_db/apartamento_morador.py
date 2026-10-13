@@ -25,7 +25,7 @@ class Morador(Base):
     caracteristicas: Mapped[str] = mapped_column(String(500))
     honestidade: Mapped[str] = mapped_column(Boolean, default=True)
 
-    sosias: Mapped[List["Sosia"]] = relationship(back_populates="morador")
+    apartamento: Mapped[List["Apartamento"]] = relationship(back_populates="moradores")
 
 class Sosia(Base):
     __tablename__ = "tbl_sosia"
@@ -33,8 +33,6 @@ class Sosia(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     id_morador: Mapped[int] = mapped_column(ForeignKey("tbl_morador.id"))
     caracteristicas: Mapped[str] = mapped_column(String(500))
-
-    morador: Mapped[List["Morador"]] = relationship(back_populates="sosia")
 
 # ler o arquivo .env
 load_dotenv()
@@ -48,6 +46,7 @@ MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
 
 
 engine = create_engine("mysql+pymysql://root@localhost:3306/apartamentos_db")
+engine = create_engine("sqlite:///apartamentos_db")
 
 Base.metadata.create_all(engine)
 

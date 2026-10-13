@@ -42,7 +42,7 @@ def mostrar_individuo(session):
     id_sosias = session.execute(select(Sosia.id)).all()
     
     tipo = random.choice(["morador", "sosia"])
-    
+    # se for um morador:
     if tipo == "morador":
         # selecionar um morador aleatório entre todos os moradores da tabela (com o id aleatorio *selecionado*):
         id_morador = random.choice(id_moradores)
@@ -54,6 +54,9 @@ def mostrar_individuo(session):
             apartamento: {apt.nro_apartamento}
             andar: {apt.andar}
             caracteristicas: {morador.caracteristicas}''')
+        
+        return("morador", morador)
+    # se for uma sosia:    
     elif tipo == "sosia":
         # selecionar uma sosia aleatória entre todas as sosias da tabela (com o id aleatorio *selecionado*):
         id_sosia = random.choice(id_sosias)
@@ -66,17 +69,21 @@ def mostrar_individuo(session):
             apartamento: {apt_sosia.nro_apartamento}
             andar: {apt_sosia.andar}
             caracteristicas: {sosia.caracteristicas}''')
+
+        return("sosia", sosia)
     
 # iniciar sessão sql (parâmetro session):
-def listar_informacoes(session):
-     print("temporario")
+# def listar_informacoes(session):
+#      print("temporario")
 
-def denunciar_sosia(): # excluir
-     # ao selecionar essa opção o usuario remove a sosia
-     print("temporario")
+def denunciar_sosia(session, sosia): # excluir
+    session.delete(sosia)
+    session.commit()
+    
+    print("Anomalia removida.")
 
-def aceitar_morador(): # inserir
-     print("temporario")
+# def personalizar_individuos(): # inserir
+#      print("temporario")
 
 # def selecionar_db():
 #     print("temporario")
@@ -104,7 +111,29 @@ def main(session):
         opcao = input("Escolha uma opção: ")
 
         if opcao == "1":
-            mostrar_individuo(session)
+            resultado = mostrar_individuo(session)
+            
+            tipo, individuo = resultado
+            
+            print('''
+            +--------------------+
+            | 1 - Decunciar      |
+            | 2 - Não Denunciar  |
+            +--------------------+''')
+            
+            executar = input("Denunciar? (Digite 1 ou 2): ")
+            
+            if executar == "1" and tipo == "sosia":
+                    denunciar_sosia(session, individuo)
+                    print("V")
+            elif executar == "1" and tipo == "morador":
+                denunciar_sosia(session, individuo)
+                print("X")
+                
+            if executar == "2" and tipo == "morador":
+                    print("V")
+            elif executar == "2" and tipo == "sosia":
+                    print("X")
 
         # elif opcao == "2":
         #     aceitar_morador(session)

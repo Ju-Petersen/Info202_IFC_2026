@@ -32,20 +32,16 @@ class Ingrediente(Base):
     __tablename__ = "tabela_ingredientes"
 
     # chave estrangeira
-    insumo_id: Mapped[int] = mapped_column(
-        ForeignKey("tabela_insumos.id"), primary_key=True)
+    insumo_id: Mapped[int] = mapped_column(ForeignKey("tabela_insumos.id"), primary_key=True)
 
     # chave estrangeira
-    receita_id: Mapped[int] = mapped_column(
-        ForeignKey("tabela_receitas.id"), primary_key=True)
+    receita_id: Mapped[int] = mapped_column(ForeignKey("tabela_receitas.id"), primary_key=True)
 
     # atributos de acesso ao objeto
     # (acima só temos o "id", nesses atributos 
     # abaixo conseguimos ter acesso ao objeto "inteiro")
-    insumo: Mapped["Insumo"] = relationship(
-        back_populates="ingredientes")    
-    receita: Mapped["Receita"] = relationship(
-        back_populates="ingredientes")    
+    insumo: Mapped["Insumo"] = relationship(back_populates="ingredientes")    
+    receita: Mapped["Receita"] = relationship(back_populates="ingredientes")    
 
     unidade: Mapped[str] = mapped_column(String(250))
     quantidade: Mapped[float] = mapped_column(Float())

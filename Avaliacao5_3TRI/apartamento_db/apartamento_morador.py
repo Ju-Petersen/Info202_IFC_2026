@@ -146,7 +146,7 @@ def main():
             MYSQL_HOST = os.getenv("MYSQL_HOST")
             MYSQL_PORT = os.getenv("MYSQL_PORT")
             MYSQL_DATABASE = os.getenv("MYSQL_DATABASE")
-            engine = create_engine("mysql+pymysql://root@localhost:3306/apartamentos_db")
+            engine = create_engine("mysql+pymysql://root:@localhost:3306/apartamentos_db")
             Base.metadata.create_all(engine)
             
             with Session(engine) as session:
@@ -420,7 +420,7 @@ def main():
                 | 3 - Ver lista novamente |
                 +-------------------------+''')
                 
-                executar = input("Denunciar? (Digite 1 ou 2): ") # o usuario decide se tal individuo e ou nao uma sosia/anomalia
+                executar = input("Denunciar? (Digite 1, 2 ou 3): ") # o usuario decide se tal individuo e ou nao uma sosia/anomalia
                 # se for denunciar:
                 if executar == "1" and tipo == "sosia": # e o individuo e uma sosia:
                         denunciar_sosia(session, individuo)
@@ -430,13 +430,13 @@ def main():
                     denunciar_sosia(session, individuo) # e o individuo nao e uma sosia:
                     print("X")
                 # se nao for denunciar:
-                if executar == "2" and tipo == "morador": # e o individuo e morador:
+                elif executar == "2" and tipo == "morador": # e o individuo e morador:
                         print("V")
                 # se nao for denunciar:
                 elif executar == "2" and tipo == "sosia": # e o individuo nao e morador:
                         print("X")
                 
-                if opcao == "3":
+                elif executar == "3":
                     print("Estes são todos os moradores não anômalos e suas características: ")
                     listar_informacoes(session)
             

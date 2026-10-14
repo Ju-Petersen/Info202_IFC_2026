@@ -23,7 +23,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Ambientes Virtuais (Venv) - !!!
+# Ambientes Virtuais (Venv) - !!!!!!!
 .env
 .venv
 env/
@@ -32,7 +32,7 @@ ENV/
 env.bak/
 venv.bak/
 
-# Variáveis de ambiente e segredos (NUNCA envie senhas ou chaves de API)
+# Variáveis de ambiente e segredos (NUNCA envie senhas ou chaves de API) - !!!!!!
 .env
 .env.*
 .secrets

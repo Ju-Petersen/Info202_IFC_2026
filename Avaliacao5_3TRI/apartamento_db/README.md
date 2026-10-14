@@ -1,2 +1,0 @@
-Execução do programa:
-

@@ -1,1 +1,0 @@
-Execuções GitBash e Terminal(uv):

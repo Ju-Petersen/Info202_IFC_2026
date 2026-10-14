@@ -44,7 +44,7 @@ def mostrar_individuo(session):
     tipo = random.choice(["morador", "sosia"])
     # se for um morador:
     if tipo == "morador":
-        # selecionar um morador aleatório entre todos os moradores da tabela (com o id aleatorio *selecionado*):
+        # selecionar um morador aleatorio entre todos os moradores da tabela (com o id aleatorio *selecionado*):
         id_morador = random.choice(id_moradores)
         morador = session.get(Morador, id_morador)
         apt = session.get(Apartamento, morador.id_apartamento)
@@ -58,7 +58,7 @@ def mostrar_individuo(session):
         return("morador", morador)
     # se for uma sosia:    
     elif tipo == "sosia":
-        # selecionar uma sosia aleatória entre todas as sosias da tabela (com o id aleatorio *selecionado*):
+        # selecionar uma sosia aleatoria entre todas as sosias da tabela (com o id aleatorio *selecionado*):
         id_sosia = random.choice(id_sosias)
         sosia = session.get(Sosia, id_sosia)
         mor_sosia = session.get(Morador, sosia.id_morador)
@@ -72,7 +72,7 @@ def mostrar_individuo(session):
 
         return("sosia", sosia)
 
-def listar_informacoes(session): # listar os moradores verdadeiros e suas características
+def listar_informacoes(session): # listar os moradores verdadeiros e suas caracteristicas
     # consultar a tabela de moradores e sosias:
     moradores = session.execute(select(Morador)).all() # -->executar<-- um select nos ids, e "recolhe-los"
     # listar o(s) objeto(s) presente(s) na tabela:
@@ -140,7 +140,7 @@ def main():
         if escolha_db == "1":
             # ler o arquivo .env
             load_dotenv()
-            # buscando as variáveis de ambiente
+            # buscando as variaveis de ambiente
             MYSQL_USER = os.getenv("MYSQL_USER")
             MYSQL_PASSWORD = os.getenv("MYSQL_PASSWORD")
             MYSQL_HOST = os.getenv("MYSQL_HOST")
@@ -461,10 +461,10 @@ if __name__ == "__main__":
 Escolha 2 classes relacionadas de forma 1 para N e implemente-as usando o SQLAlchemy - FEITO
     - Cada classe deve ter pelo menos 4 atributos - FEITO
     - Escolha classes diferentes de outras pessoas! Uma classe pode ser igual, mas a outra precisa ser diferente - FEITO
-!!! Faça um programa de terminal que interaja com o usuário, 
-    permitindo realizar as 3 operações: --> --> inserir, listar e excluir dados <-- <-- - FEITO
+!!! Faca um programa de terminal que interaja com o usuario, 
+    permitindo realizar as 3 operacoes: --> --> inserir, listar e excluir dados <-- <-- - FEITO
         - Devem ser manipulados dados das 2 classes - FEITO
-        - O programa deve ter opção para o usuário se conectar a um banco de dados SQLite ou a um banco de dados MySql - ??
-        - O usuário escolhe em qual banco de dados deseja se conectar - ??
-        - Durante a operação do programa ele pode alterar a conexão (SQLite ou MySql) - ??
+        - O programa deve ter opcao para o usuario se conectar a um banco de dados SQLite ou a um banco de dados MySql - ??
+        - O usuario escolhe em qual banco de dados deseja se conectar - ??
+        - Durante a operacao do programa ele pode alterar a conexao (SQLite ou MySql) - ??
 '''

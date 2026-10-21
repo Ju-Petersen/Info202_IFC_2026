@@ -1,19 +1,23 @@
 import streamlit as st
+from home import dados
 
-st.title("Página de Solicitação de Nome")
-st.write("Esta é a segunda subpágina.")
+st.title("User Interaction Page")
+st.write("This is the second subpage.")
 
-nome = st.text_input("Digite seu nome:")
+name = st.text_input("Type in your name:")
+age = st.number_input("Type in your age:", step=1)
 
 # se clicar no botão "Enviar"
-if st.button("Enviar"):
-    # se foi preenchido o nome
-    if nome:
-        st.success(f"Olá, {nome}! Seja bem-vindo.")
+if st.button("Send"):
+    # se foi preenchido o nome e a idade
+    if age and name:
+        st.success(f"Hello, {name}! Your age is {age}.")
+        st.dataframe(dados['Name'].append(name)) # os dados são exibidos em um "dataframe"
+        st.dataframe(dados['Age'].append(age))
     else:
-        st.warning("Por favor, digite seu nome.")
+        st.warning("Please, type in your name and age.")
 
 # se clicar no botão de "Voltar"...
-if st.button("Voltar ao início"):
+if st.button("Back to Home"):
     # "vai" para a página inicial
-    st.switch_page("Inicio.py")
+    st.switch_page("Home.py")
